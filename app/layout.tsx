@@ -10,8 +10,12 @@ const montserrat = Montserrat({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Receivt",
   description: "Fast, custom and without a tech team.",
-    generator: 'v0.dev'
-}
+  generator: "v0.dev",
+  icons: {
+    icon: "/Favicon.png",
+  },
+};
+
 
 export default function RootLayout({
   children,
