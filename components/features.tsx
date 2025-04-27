@@ -70,8 +70,16 @@ export default function Features() {
   ]
 
   return (
-      <section id="features" className="w-full pt-20 bg-gradient-to-bl from-white to-green-100">
-          <div className="container mx-auto px-4 py-16 max-w-6xl">
+      <section 
+        id="features" 
+        className="w-full py-20 bg-no-repeat min-h-[85vh] flex flex-col justify-center relative overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/background/features-bg.png')",
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center"
+        }}
+      >
+          <div className="container mx-auto px-4 py-16 max-w-6xl relative z-10">
             <h1 className="text-3xl md:text-4xl font-bold text-center text-[#083118] mb-16">Discover our features</h1>
 
             <div className="grid md:grid-cols-2 gap-8 lg:gap-16">

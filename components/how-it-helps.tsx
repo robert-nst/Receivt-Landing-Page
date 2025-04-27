@@ -10,8 +10,16 @@ export default function HowItHelps() {
     };
 
     return (
-        <section id="how-it-helps" className="w-full pt-20 bg-gradient-to-br from-green-100 to-white">
-            <div className="container px-4 md:px-6">
+        <section 
+            id="how-it-helps" 
+            className="w-full pt-20 bg-no-repeat min-h-[85vh] flex flex-col justify-center relative overflow-hidden"
+            style={{
+                backgroundImage: "url('/images/background/how-it-helps-bg.png')",
+                backgroundSize: "100% 100%",
+                backgroundPosition: "center"
+            }}
+        >
+            <div className="container px-4 md:px-6 relative z-10">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-[#083118] mb-4">
                     Businesses grow when customers return
                 </h1>
@@ -86,7 +94,7 @@ export default function HowItHelps() {
                     <div className="relative">
                         <div className="w-full h-[500px]">
                             <Image
-                                src="benefits.svg"
+                                src="/images/background/how-it-helps.png"
                                 alt="Laptop with Receivt dashboard showing customer interactions"
                                 fill
                                 className="object-contain"
