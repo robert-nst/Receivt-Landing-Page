@@ -281,41 +281,53 @@ export default function Configurator() {
     )
   }
 
-  return (
-    <section id="configurator" className="w-full pt-20 bg-gradient-to-br from-green-100 to-white">
-      <div className="container px-4 md:px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-[#083118] mb-4">
-            Ever wondered how your app could look? See it in 30 seconds!
-          </h2>
-          <p className="text-[#083118]/70 max-w-2xl mx-auto">
-            Follow these simple steps to visualize your own branded digital service app.
-          </p>
-        </div>
+  // Previous code remains the same...
 
-        {!showPreview && renderProgressBar()}
+  // Previous code remains the same...
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="py-8"
-          >
-            {showPreview ? renderPreview() : getStepContent()}
-          </motion.div>
-        </AnimatePresence>
-
-        {!showPreview && step > 1 && (
-          <div className="flex justify-center mt-8">
-            <Button variant="outline" className="border-[#083118] text-[#083118]" onClick={handleBack}>
-              Back
-            </Button>
-          </div>
-        )}
+return (
+  <section 
+    id="configurator" 
+    className="w-full py-20 bg-no-repeat min-h-[85vh] flex flex-col justify-center relative overflow-hidden"
+    style={{
+      backgroundImage: "url('/images/background/configurator-bg.png')",
+      backgroundSize: "100% 100%",
+      backgroundPosition: "center"
+    }}
+  >
+    <div className="container px-4 md:px-6 relative z-10">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold text-[#083118] mb-4">
+          Ever wondered how your app could look? See it in 30 seconds!
+        </h2>
+        <p className="text-[#083118]/70 max-w-2xl mx-auto">
+          Follow these simple steps to visualize your own branded digital service app.
+        </p>
       </div>
-    </section>
-  )
+
+      {!showPreview && renderProgressBar()}
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="py-8"
+        >
+          {showPreview ? renderPreview() : getStepContent()}
+        </motion.div>
+      </AnimatePresence>
+
+      {!showPreview && step > 1 && (
+        <div className="flex justify-center mt-8">
+          <Button variant="outline" className="border-[#083118] text-[#083118]" onClick={handleBack}>
+            Back
+          </Button>
+        </div>
+      )}
+    </div>
+  </section>
+)
 }
