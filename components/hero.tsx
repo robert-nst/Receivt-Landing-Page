@@ -4,13 +4,13 @@ import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section id="home" className="w-full py-12 bg-gradient-to-bl from-white to-green-100">
+    <section id="home" className="w-full py-20 bg-gradient-to-bl from-white to-green-100">
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
                   <div className="relative inline-block">
-                      <p className="text-3xl font-semibold tracking-tighter sm:text-5xl xl:text-8xl/none text-[#083118]">
+                      <p className="text-3xl font-semibold tracking-tighter sm:text-5xl xl:text-7xl/none text-[#083118]">
                           Launch digital services under your  <span className="relative">
                       own brand
                       <Image

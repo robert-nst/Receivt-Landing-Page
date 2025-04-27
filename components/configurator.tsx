@@ -282,7 +282,7 @@ export default function Configurator() {
   }
 
   return (
-    <section id="configurator" className="w-full py-12 bg-gradient-to-br from-green-100 to-white">
+    <section id="configurator" className="w-full pt-20 bg-gradient-to-br from-green-100 to-white">
       <div className="container px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-[#083118] mb-4">

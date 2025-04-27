@@ -8,16 +8,18 @@ import { ChevronDown, ChevronUp } from "lucide-react"
 interface CollapsibleProps {
   title: string
   content: React.ReactNode
-  defaultOpen?: boolean
+  // defaultOpen?: boolean
+  isOpen: boolean;
+  onToggle: (id: string) => void;
 }
 
-export function Collapsible({ title, content, defaultOpen = false }: CollapsibleProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
+export function Collapsible({ id, title, content, isOpen, onToggle }: CollapsibleProps) {
+  // const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
     <div className="rounded-3xl bg-white/80 backdrop-blur-sm shadow-sm">
         <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => onToggle(id)}
             className="w-full px-6 py-4 flex justify-between items-center text-left font-medium text-xl text-green-900 hover:bg-green-50 transition-colors rounded-lg"
         >
             <h1 className={`font-semibold ${isOpen ? "text-2xl text-[#083118]" : "text-xl text-gray-600"}`}>{title}</h1>

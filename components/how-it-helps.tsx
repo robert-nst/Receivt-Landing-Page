@@ -1,85 +1,101 @@
-import {Collapsible} from "@/components/collapsible";
+import { useState } from "react";
+import { Collapsible } from "@/components/collapsible";
 import Image from "next/image";
 
 export default function HowItHelps() {
-  return (
-    <section id="how-it-helps" className="w-full py-12 bg-gradient-to-br from-green-100 to-white">
-      <div className="container px-4 md:px-6">=
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-[#083118] mb-4">
-              Businesses grow when customers return
-            </h1>
-            <p className="text-lg text-center text-[#083118] max-w-4xl mx-auto mb-16">
-              <span className="font-semibold">Receivt</span> helps any business to have its own digital system with
-              loyalty
-              and promotions so you keep customers engaged and reduce operational waste.
-            </p>
+    const [openCollapsible, setOpenCollapsible] = useState<string | null>("1"); // Default open to the first collapsible
 
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <Collapsible
-                    title="Launch digital services without a tech team."
-                    defaultOpen={true}
-                    content={
-                      <div className="space-y-4 pt-4">
-                        <p className="text-[#083118]">No coding. No external developers.</p>
-                        <p className="text-[#083118]">
-                          You go live in days and stay in full control of your customer experience.
-                        </p>
-                      </div>
-                    }
-                />
+    const handleToggle = (id: string) => {
+        setOpenCollapsible((prev) => (prev === id ? null : id));
+    };
 
-                <Collapsible
-                    title="Boost customer loyalty and retention"
-                    content={
-                      <div className="space-y-4 pt-4">
-                        <p className="text-[#083118]">
-                          Create personalized loyalty programs that keep customers coming back.
-                        </p>
-                        <p className="text-[#083118]">
-                          Implement rewards, points systems, and special promotions to increase retention.
-                        </p>
-                      </div>
-                    }
-                />
+    return (
+        <section id="how-it-helps" className="w-full pt-20 bg-gradient-to-br from-green-100 to-white">
+            <div className="container px-4 md:px-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-[#083118] mb-4">
+                    Businesses grow when customers return
+                </h1>
+                <p className="text-lg text-center text-[#083118] max-w-4xl mx-auto mb-16">
+                    <span className="font-semibold">Receivt</span> helps any business to have its own digital system with loyalty
+                    and promotions so you keep customers engaged and reduce operational waste.
+                </p>
 
-                <Collapsible
-                    title="Save on paper costs"
-                    content={
-                      <div className="space-y-4 pt-4">
-                        <p className="text-[#083118]">Eliminate paper receipts and physical loyalty cards.</p>
-                        <p className="text-[#083118]">Reduce your environmental impact while cutting operational
-                          expenses.</p>
-                      </div>
-                    }
-                />
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                    <div className="space-y-4">
+                        <Collapsible
+                            id="1"
+                            title="Launch digital services without a tech team."
+                            isOpen={openCollapsible === "1"}
+                            onToggle={handleToggle}
+                            content={
+                                <div className="space-y-4 pt-4">
+                                    <p className="text-[#083118]">No coding. No external developers.</p>
+                                    <p className="text-[#083118]">
+                                        You go live in days and stay in full control of your customer experience.
+                                    </p>
+                                </div>
+                            }
+                        />
 
-                <Collapsible
-                    title="Gain insights into customer behavior"
-                    content={
-                      <div className="space-y-4 pt-4">
-                        <p className="text-[#083118]">Track purchasing patterns and customer preferences.</p>
-                        <p className="text-[#083118]">
-                          Use data-driven insights to optimize your offerings and marketing strategies.
-                        </p>
-                      </div>
-                    }
-                />
-              </div>
+                        <Collapsible
+                            id="2"
+                            title="Boost customer loyalty and retention"
+                            isOpen={openCollapsible === "2"}
+                            onToggle={handleToggle}
+                            content={
+                                <div className="space-y-4 pt-4">
+                                    <p className="text-[#083118]">
+                                        Create personalized loyalty programs that keep customers coming back.
+                                    </p>
+                                    <p className="text-[#083118]">
+                                        Implement rewards, points systems, and special promotions to increase retention.
+                                    </p>
+                                </div>
+                            }
+                        />
 
-              <div className="relative">
-                <div className="w-full h-[500px]">
-                  <Image
-                      src="benefits.svg"
-                      alt="Laptop with Receivt dashboard showing customer interactions"
-                      fill
-                      className="object-contain"
-                      priority
-                  />
+                        <Collapsible
+                            id="3"
+                            title="Save on paper costs"
+                            isOpen={openCollapsible === "3"}
+                            onToggle={handleToggle}
+                            content={
+                                <div className="space-y-4 pt-4">
+                                    <p className="text-[#083118]">Eliminate paper receipts and physical loyalty cards.</p>
+                                    <p className="text-[#083118]">Reduce your environmental impact while cutting operational expenses.</p>
+                                </div>
+                            }
+                        />
+
+                        <Collapsible
+                            id="4"
+                            title="Gain insights into customer behavior"
+                            isOpen={openCollapsible === "4"}
+                            onToggle={handleToggle}
+                            content={
+                                <div className="space-y-4 pt-4">
+                                    <p className="text-[#083118]">Track purchasing patterns and customer preferences.</p>
+                                    <p className="text-[#083118]">
+                                        Use data-driven insights to optimize your offerings and marketing strategies.
+                                    </p>
+                                </div>
+                            }
+                        />
+                    </div>
+
+                    <div className="relative">
+                        <div className="w-full h-[500px]">
+                            <Image
+                                src="benefits.svg"
+                                alt="Laptop with Receivt dashboard showing customer interactions"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>=
-    </section>
-  )
+        </section>
+    );
 }

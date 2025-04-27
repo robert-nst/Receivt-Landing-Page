@@ -70,7 +70,7 @@ export default function Features() {
   ]
 
   return (
-      <section id="features" className="w-full py-12 bg-gradient-to-bl from-white to-green-100">
+      <section id="features" className="w-full pt-20 bg-gradient-to-bl from-white to-green-100">
           <div className="container mx-auto px-4 py-16 max-w-6xl">
             <h1 className="text-3xl md:text-4xl font-bold text-center text-[#083118] mb-16">Discover our features</h1>
 
