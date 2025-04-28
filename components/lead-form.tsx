@@ -45,7 +45,7 @@ export default function LeadForm() {
   }
 
   return (
-    <section id="contact" className="w-full pt-20 bg-[#083118] text-[#fffff3]">
+    <section id="contact" className="w-full pt-20 pb-10 bg-[#083118] text-[#fffff3]">
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
           <div className="space-y-4">
