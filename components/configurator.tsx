@@ -28,6 +28,12 @@ const receiptsImages = {
 
 const imageStyle = { maxWidth: 300, maxHeight: 600 };
 
+const previewTabs = [
+  { key: "loyalty", label: "Loyalty" },
+  { key: "promotions", label: "Promotions" },
+  { key: "receipts", label: "Receipts" },
+];
+
 export default function Configurator() {
   const [step, setStep] = useState(1)
   const [brandName, setBrandName] = useState("")
@@ -36,6 +42,7 @@ export default function Configurator() {
   const [receiptsType, setReceiptsType] = useState<ReceiptsType | null>(null)
   const [email, setEmail] = useState("")
   const [showPreview, setShowPreview] = useState(false)
+  const [activeTab, setActiveTab] = useState("loyalty")
 
   const handleNext = () => {
     if (step < 5) {
@@ -194,6 +201,56 @@ export default function Configurator() {
     }
   }
 
+  // Tabbed preview for the last step
+  const renderPreview = () => {
+    let imageSrc = "";
+    let imageAlt = "";
+
+    if (activeTab === "loyalty" && loyaltyType) {
+      imageSrc = loyaltyImages[loyaltyType];
+      imageAlt = loyaltyType;
+    } else if (activeTab === "promotions" && promotionsType) {
+      imageSrc = promotionsImages[promotionsType];
+      imageAlt = promotionsType;
+    } else if (activeTab === "receipts" && receiptsType) {
+      imageSrc = receiptsImages[receiptsType];
+      imageAlt = receiptsType;
+    }
+
+    return (
+      <div className="flex flex-col items-center bg-transparent">
+        <div className="mb-4 flex justify-center gap-4">
+          {previewTabs.map(tab => (
+            <button
+              key={tab.key}
+              className={`px-6 py-2 rounded-full text-lg font-semibold transition-colors ${
+                activeTab === tab.key
+                  ? "bg-[#083118] text-[#fffff3]"
+                  : "bg-[#e6f4ec] text-[#083118] hover:bg-[#cde9db]"
+              }`}
+              onClick={() => setActiveTab(tab.key)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        {imageSrc && (
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            style={imageStyle}
+          />
+        )}
+        <Button
+          className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-8 px-8 py-6 text-lg"
+          onClick={() => (window.location.href = "#contact")}
+        >
+          Get Your Custom App
+        </Button>
+      </div>
+    );
+  };
+
   const renderProgressBar = () => {
     return (
       <div className="flex items-center justify-center w-full max-w-4xl mx-auto mb-12">
@@ -214,46 +271,6 @@ export default function Configurator() {
       </div>
     )
   }
-
-  const renderPreview = () => (
-    <div className="flex flex-col items-center bg-transparent">
-      <div className="flex flex-col md:flex-row justify-center items-center gap-8 bg-transparent">
-        {loyaltyType && (
-          <div className="flex flex-col items-center bg-transparent">
-            <img
-              src={loyaltyImages[loyaltyType]}
-              alt={loyaltyType}
-              style={imageStyle}
-            />
-          </div>
-        )}
-        {promotionsType && (
-          <div className="flex flex-col items-center bg-transparent">
-            <img
-              src={promotionsImages[promotionsType]}
-              alt={promotionsType}
-              style={imageStyle}
-            />
-          </div>
-        )}
-        {receiptsType && (
-          <div className="flex flex-col items-center bg-transparent">
-            <img
-              src={receiptsImages[receiptsType]}
-              alt={receiptsType}
-              style={imageStyle}
-            />
-          </div>
-        )}
-      </div>
-      <Button
-        className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-8 px-8 py-6 text-lg"
-        onClick={() => (window.location.href = "#contact")}
-      >
-        Get Your Custom App
-      </Button>
-    </div>
-  )
 
   return (
     <section 
