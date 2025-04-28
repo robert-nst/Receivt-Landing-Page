@@ -215,8 +215,8 @@ export default function Configurator() {
     )
   }
 
-  const renderPreview = () => {
-    return (
+  const renderPreview = () => (
+    <div className="flex flex-col items-center bg-transparent">
       <div className="flex flex-col md:flex-row justify-center items-center gap-8 bg-transparent">
         {loyaltyType && (
           <div className="flex flex-col items-center bg-transparent">
@@ -225,12 +225,6 @@ export default function Configurator() {
               alt={loyaltyType}
               style={imageStyle}
             />
-            <Button
-              className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-4 px-8 py-6 text-lg"
-              onClick={() => (window.location.href = "#contact")}
-            >
-              Get Your Custom App
-            </Button>
           </div>
         )}
         {promotionsType && (
@@ -240,12 +234,6 @@ export default function Configurator() {
               alt={promotionsType}
               style={imageStyle}
             />
-            <Button
-              className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-4 px-8 py-6 text-lg"
-              onClick={() => (window.location.href = "#contact")}
-            >
-              Get Your Custom App
-            </Button>
           </div>
         )}
         {receiptsType && (
@@ -255,17 +243,17 @@ export default function Configurator() {
               alt={receiptsType}
               style={imageStyle}
             />
-            <Button
-              className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-4 px-8 py-6 text-lg"
-              onClick={() => (window.location.href = "#contact")}
-            >
-              Get Your Custom App
-            </Button>
           </div>
         )}
       </div>
-    )
-  }
+      <Button
+        className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-8 px-8 py-6 text-lg"
+        onClick={() => (window.location.href = "#contact")}
+      >
+        Get Your Custom App
+      </Button>
+    </div>
+  )
 
   return (
     <section 
