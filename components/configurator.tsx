@@ -3,12 +3,21 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
+import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Configurator() {
   const [logo, setLogo] = useState<string | null>(null)
+  const [websiteUrl, setWebsiteUrl] = useState("")
+  const [logoError, setLogoError] = useState<string | null>(null)
   const [primaryColor, setPrimaryColor] = useState("#00796b")
+  const [secondaryColor, setSecondaryColor] = useState("#4db6ac")
+  const [isLoading, setIsLoading] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [activeNavItem, setActiveNavItem] = useState("home")
+  const [extractedColors, setExtractedColors] = useState<string[]>([])
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [customColor, setCustomColor] = useState("#000000")
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
@@ -23,33 +32,99 @@ export default function Configurator() {
     e.preventDefault()
     setIsDragging(false)
     const file = e.dataTransfer.files[0]
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setLogo(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
+    handleFileUpload(file)
   }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setLogo(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
+    if (file) {
+      handleFileUpload(file)
     }
   }
 
+  const handleFileUpload = (file: File) => {
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setLogo(e.target?.result as string)
+        setLogoError(null)
+      }
+      reader.onerror = () => {
+        setLogoError("Error reading file. Please try again.")
+      }
+      reader.readAsDataURL(file)
+    } else {
+      setLogoError("Please upload an image file.")
+    }
+  }
+
+  const validateInput = (input: string) => {
+    // Regex to match a valid website format (e.g., anything.domain)
+    const websiteRegex = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    return websiteRegex.test(input);
+  };
+
+  const extractColorsFromLogo = async (logoUrl: string) => {
+    try {
+      const response = await fetch(`/api/extract-colors?url=${encodeURIComponent(logoUrl)}`);
+      if (!response.ok) {
+        throw new Error('Failed to extract colors');
+      }
+      const data = await response.json();
+      if (data.colors && data.colors.length > 0) {
+        setExtractedColors(data.colors);
+        // Set the first two colors as primary and secondary if available
+        if (data.colors.length >= 2) {
+          setPrimaryColor(data.colors[0]);
+          setSecondaryColor(data.colors[1]);
+        }
+      }
+    } catch (error) {
+      console.error('Error extracting colors:', error);
+    }
+  };
+
+  const handleLogoExtraction = async (url: string) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/extract-logo?url=${encodeURIComponent(url)}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch logo');
+      }
+      const data = await response.json();
+      if (data.logoUrl) {
+        setLogo(data.logoUrl);
+        setLogoError(null);
+        // Extract colors from the logo
+        await extractColorsFromLogo(data.logoUrl);
+      } else {
+        setLogoError("No logo found for this website.");
+      }
+    } catch (error) {
+      setLogoError("Error extracting logo. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleWebsiteSubmit = async () => {
+    if (!websiteUrl) {
+      setLogoError("Please enter a website URL");
+      return;
+    }
+
+    if (validateInput(websiteUrl)) {
+      setLogoError(null);
+      const formattedUrl = websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`;
+      await handleLogoExtraction(formattedUrl);
+    } else {
+      setLogoError("Please enter a valid website (e.g., example.com).");
+    }
+  };
+
   const predefinedColors = [
-    "#00796b",
-    "#2E7D32",
-    "#D32F2F",
-    "#F57C00",
-    "#7B1FA2",
-    "#006064"
+    "#00796b", "#2E7D32", "#D32F2F", "#F57C00", "#7B1FA2", "#006064",
+    "#4db6ac", "#81c784", "#e57373", "#ffb74d", "#ba68c8", "#4dd0e1"
   ]
 
   const navItems = [
@@ -240,8 +315,8 @@ export default function Configurator() {
                     >
                       Use Now
                     </button>
-                  </div>
-                ))}
+                </div>
+              ))}
               </div>
             </div>
           </div>
@@ -361,63 +436,160 @@ export default function Configurator() {
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Business Logo</label>
-                <div
-                  className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                    isDragging ? 'border-[#00796b] bg-[#00796b]/5' : 'border-gray-300'
-                  }`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClick={() => document.getElementById('logo-input')?.click()}
-                >
-                  <input
-                    type="file"
-                    id="logo-input"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleFileSelect}
-                  />
-                  <div className="flex flex-col items-center gap-2">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <p className="text-sm text-gray-500">
-                      Drag and drop your logo here, or click to select a file
-                    </p>
+                <label className="block text-sm font-medium mb-2">Website URL</label>
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      placeholder="Enter your website (e.g., example.com)"
+                      value={websiteUrl}
+                      onChange={(e) => setWebsiteUrl(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button 
+                      onClick={handleWebsiteSubmit}
+                      disabled={isLoading}
+                      style={{ 
+                        backgroundColor: primaryColor,
+                        color: 'white'
+                      }}
+                    >
+                      {isLoading ? "Loading..." : "Extract Logo"}
+                    </Button>
                   </div>
+                  {logoError && (
+                    <p className="text-sm text-red-600">{logoError}</p>
+                  )}
+                  {logo && (
+                    <div className="p-4 border rounded-lg">
+                      <p className="text-sm font-medium mb-2">Extracted Logo:</p>
+                      <img src={logo} alt="Extracted Logo" className="max-h-20 object-contain" />
+                      <Button
+                        onClick={() => {
+                          setLogo(null)
+                          setWebsiteUrl("")
+                          setLogoError(null)
+                        }}
+                        variant="outline"
+                        className="mt-2 text-sm"
+                      >
+                        Remove Logo
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Primary Color</label>
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <input
-                      type="color"
-                      value={primaryColor}
-                      onChange={(e) => setPrimaryColor(e.target.value)}
-                      className="w-12 h-12 p-1 rounded cursor-pointer"
-                    />
+              <div className="space-y-6">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium">Colors</label>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowColorPicker(!showColorPicker)}
+                      className="text-xs"
+                    >
+                      {showColorPicker ? "Hide Picker" : "Add Custom Color"}
+                    </Button>
                   </div>
-                  <input
-                    type="text"
-                    value={primaryColor}
-                    onChange={(e) => setPrimaryColor(e.target.value)}
-                    className="px-3 py-2 border rounded-md w-32"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-3 mt-3">
-                  {predefinedColors.map((color) => (
-                    <button
-                      key={color}
-                      className={`w-8 h-8 rounded-full transition-transform hover:scale-110 ${
-                        primaryColor === color ? 'ring-2 ring-offset-2 ring-[#00796b]' : ''
-                      }`}
-                      style={{ backgroundColor: color }}
-                      onClick={() => setPrimaryColor(color)}
-                    />
-                  ))}
+
+                  {showColorPicker && (
+                    <div className="mb-4 p-4 border rounded-lg">
+                      <div className="flex items-center gap-4 mb-4">
+                        <input
+                          type="color"
+                          value={customColor}
+                          onChange={(e) => setCustomColor(e.target.value)}
+                          className="w-12 h-12 p-1 rounded cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={customColor}
+                          onChange={(e) => setCustomColor(e.target.value)}
+                          className="px-3 py-2 border rounded-md w-32"
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            if (!extractedColors.includes(customColor)) {
+                              setExtractedColors([...extractedColors, customColor]);
+                            }
+                            setShowColorPicker(false);
+                          }}
+                        >
+                          Add Color
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-2">Primary Color</label>
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <input
+                            type="color"
+                            value={primaryColor}
+                            onChange={(e) => setPrimaryColor(e.target.value)}
+                            className="w-12 h-12 p-1 rounded cursor-pointer"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          value={primaryColor}
+                          onChange={(e) => setPrimaryColor(e.target.value)}
+                          className="px-3 py-2 border rounded-md w-32"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-2">Secondary Color</label>
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <input
+                            type="color"
+                            value={secondaryColor}
+                            onChange={(e) => setSecondaryColor(e.target.value)}
+                            className="w-12 h-12 p-1 rounded cursor-pointer"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          value={secondaryColor}
+                          onChange={(e) => setSecondaryColor(e.target.value)}
+                          className="px-3 py-2 border rounded-md w-32"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {extractedColors.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-xs text-gray-500 mb-2">Colors from Logo</p>
+                      <div className="flex flex-wrap gap-2">
+                        {extractedColors.map((color, index) => (
+                          <button
+                            key={index}
+                            className={`w-8 h-8 rounded-full transition-transform hover:scale-110 ${
+                              (primaryColor === color || secondaryColor === color) ? 'ring-2 ring-offset-2 ring-[#00796b]' : ''
+                            }`}
+                            style={{ backgroundColor: color }}
+                            onClick={() => {
+                              if (index % 2 === 0) {
+                                setPrimaryColor(color);
+                              } else {
+                                setSecondaryColor(color);
+                              }
+                            }}
+                            title={color}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
