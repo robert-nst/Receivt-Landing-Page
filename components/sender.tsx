@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import axios from "axios";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import { URL } from "url";
 
 interface WebsiteField {
@@ -13,23 +13,12 @@ interface WebsiteField {
 
 async function extractLogo(url: string): Promise<string | null> {
     try {
-        const response = await axios.get(url);
-        const $ = cheerio.load(response.data);
-
-        // Try finding favicon
-        let iconHref = $('link[rel~="icon"]').attr('href');
-        if (iconHref) {
-            return new URL(iconHref, url).href;
+        const response = await fetch(`/api/extract-logo?url=${encodeURIComponent(url)}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch logo');
         }
-
-        // Try finding image with "logo" in alt, class, or id
-        let imgLogo = $('img[alt*="logo"], img[class*="logo"], img[id*="logo"]').first();
-        if (imgLogo.length) {
-            let src = imgLogo.attr('src');
-            return new URL(src, url).href;
-        }
-
-        return null;
+        const data = await response.json();
+        return data.logoUrl;
     } catch (error) {
         console.error("Error extracting logo:", error);
         return null;
