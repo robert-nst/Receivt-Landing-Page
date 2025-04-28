@@ -9,6 +9,25 @@ type LoyaltyType = "card" | "points" | "tiers"
 type PromotionsType = "coupons" | "discounts" | "points"
 type ReceiptsType = "list" | "recent"
 
+const loyaltyImages = {
+  card: "/images/configurator/loyalty-1.png",
+  points: "/images/configurator/loyalty-2.png",
+  tiers: "/images/configurator/loyalty-3.png",
+};
+
+const promotionsImages = {
+  coupons: "/images/configurator/promotions-1.png",
+  discounts: "/images/configurator/promotions-2.png",
+  points: "/images/configurator/promotions-3.png",
+};
+
+const receiptsImages = {
+  list: "/images/configurator/receipts-1.png",
+  recent: "/images/configurator/receipts-2.png",
+};
+
+const imageStyle = { maxWidth: 300, maxHeight: 600 };
+
 export default function Configurator() {
   const [step, setStep] = useState(1)
   const [brandName, setBrandName] = useState("")
@@ -60,25 +79,20 @@ export default function Configurator() {
         return (
           <div className="space-y-8">
             <h2 className="text-3xl font-bold text-center text-[#083118]">Choose your loyalty page appearance:</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {["card", "points", "tiers"].map((type) => (
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+              {(["card", "points", "tiers"] as LoyaltyType[]).map((type) => (
                 <div key={type} className="flex flex-col items-center">
-                  <div className="relative w-[220px] h-[400px] mb-4 rounded-3xl overflow-hidden border-4 border-gray-200">
-                    <div className="absolute top-0 left-0 right-0 h-8 bg-white flex items-center px-4">
-                      <div className="text-xs">9:30</div>
-                      <div className="ml-auto flex items-center space-x-1">
-                        <div className="w-4 h-4 rounded-full bg-black"></div>
-                        <div className="w-4 h-1 bg-black"></div>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-black mx-auto w-1/3"></div>
-                  </div>
+                  <img
+                    src={loyaltyImages[type]}
+                    alt={type}
+                    style={imageStyle}
+                  />
                   <Button
-                    className={`bg-[#26a269] hover:bg-[#26a269]/90 text-white w-full max-w-[220px] ${
+                    className={`bg-[#26a269] hover:bg-[#26a269]/90 text-white w-full mt-4 px-8 py-6 text-lg ${
                       loyaltyType === type ? "ring-2 ring-offset-2 ring-[#083118]" : ""
                     }`}
                     onClick={() => {
-                      setLoyaltyType(type as LoyaltyType)
+                      setLoyaltyType(type)
                       handleNext()
                     }}
                   >
@@ -93,25 +107,20 @@ export default function Configurator() {
         return (
           <div className="space-y-8">
             <h2 className="text-3xl font-bold text-center text-[#083118]">Choose your promotions page appearance:</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {["coupons", "discounts", "points"].map((type) => (
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+              {(["coupons", "discounts", "points"] as PromotionsType[]).map((type) => (
                 <div key={type} className="flex flex-col items-center">
-                  <div className="relative w-[220px] h-[400px] mb-4 rounded-3xl overflow-hidden border-4 border-gray-200">
-                    <div className="absolute top-0 left-0 right-0 h-8 bg-white flex items-center px-4">
-                      <div className="text-xs">9:30</div>
-                      <div className="ml-auto flex items-center space-x-1">
-                        <div className="w-4 h-4 rounded-full bg-black"></div>
-                        <div className="w-4 h-1 bg-black"></div>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-black mx-auto w-1/3"></div>
-                  </div>
+                  <img
+                    src={promotionsImages[type]}
+                    alt={type}
+                    style={imageStyle}
+                  />
                   <Button
-                    className={`bg-[#26a269] hover:bg-[#26a269]/90 text-white w-full max-w-[220px] ${
+                    className={`bg-[#26a269] hover:bg-[#26a269]/90 text-white w-full mt-4 px-8 py-6 text-lg ${
                       promotionsType === type ? "ring-2 ring-offset-2 ring-[#083118]" : ""
                     }`}
                     onClick={() => {
-                      setPromotionsType(type as PromotionsType)
+                      setPromotionsType(type)
                       handleNext()
                     }}
                   >
@@ -128,25 +137,20 @@ export default function Configurator() {
             <h2 className="text-3xl font-bold text-center text-[#083118]">
               Choose your digital receipts page appearance:
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {["list", "recent"].map((type) => (
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+              {(["list", "recent"] as ReceiptsType[]).map((type) => (
                 <div key={type} className="flex flex-col items-center">
-                  <div className="relative w-[220px] h-[400px] mb-4 rounded-3xl overflow-hidden border-4 border-gray-200">
-                    <div className="absolute top-0 left-0 right-0 h-8 bg-white flex items-center px-4">
-                      <div className="text-xs">9:30</div>
-                      <div className="ml-auto flex items-center space-x-1">
-                        <div className="w-4 h-4 rounded-full bg-black"></div>
-                        <div className="w-4 h-1 bg-black"></div>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-black mx-auto w-1/3"></div>
-                  </div>
+                  <img
+                    src={receiptsImages[type]}
+                    alt={type}
+                    style={imageStyle}
+                  />
                   <Button
-                    className={`bg-[#26a269] hover:bg-[#26a269]/90 text-white w-full max-w-[220px] ${
+                    className={`bg-[#26a269] hover:bg-[#26a269]/90 text-white w-full mt-4 px-8 py-6 text-lg ${
                       receiptsType === type ? "ring-2 ring-offset-2 ring-[#083118]" : ""
                     }`}
                     onClick={() => {
-                      setReceiptsType(type as ReceiptsType)
+                      setReceiptsType(type)
                       handleNext()
                     }}
                   >
@@ -213,121 +217,99 @@ export default function Configurator() {
 
   const renderPreview = () => {
     return (
-      <div className="space-y-8">
-        <h2 className="text-3xl font-bold text-center text-[#083118]">Preview the branded app you created:</h2>
-        <div className="flex justify-center">
-          <div className="relative w-[280px] h-[500px] rounded-3xl overflow-hidden border-4 border-gray-200">
-            <div className="absolute top-0 left-0 right-0 h-8 bg-white flex items-center px-4">
-              <div className="text-xs">9:30</div>
-              <div className="ml-auto flex items-center space-x-1">
-                <div className="w-4 h-4 rounded-full bg-black"></div>
-                <div className="w-4 h-1 bg-black"></div>
-              </div>
-            </div>
-            <div className="p-4 bg-white h-full">
-              <div className="text-xl font-bold text-[#083118] mb-4">{brandName || "Your Brand"}</div>
-
-              <div className="space-y-4">
-                <div className="p-3 bg-[#083118]/5 rounded-lg">
-                  <div className="text-sm font-medium text-[#083118]">Loyalty Program</div>
-                  <div className="text-xs text-[#083118]/70">
-                    {loyaltyType === "card"
-                      ? "Card-based loyalty"
-                      : loyaltyType === "points"
-                        ? "Points-based rewards"
-                        : loyaltyType === "tiers"
-                          ? "Tier-based membership"
-                          : "Custom loyalty program"}
-                  </div>
-                </div>
-
-                <div className="p-3 bg-[#083118]/5 rounded-lg">
-                  <div className="text-sm font-medium text-[#083118]">Promotions</div>
-                  <div className="text-xs text-[#083118]/70">
-                    {promotionsType === "coupons"
-                      ? "Digital coupons"
-                      : promotionsType === "discounts"
-                        ? "Personalized discounts"
-                        : promotionsType === "points"
-                          ? "Points-based offers"
-                          : "Custom promotions"}
-                  </div>
-                </div>
-
-                <div className="p-3 bg-[#083118]/5 rounded-lg">
-                  <div className="text-sm font-medium text-[#083118]">Digital Receipts</div>
-                  <div className="text-xs text-[#083118]/70">
-                    {receiptsType === "list"
-                      ? "Organized receipt list"
-                      : receiptsType === "recent"
-                        ? "Recent receipts view"
-                        : "Custom receipt format"}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-black mx-auto w-1/3"></div>
+      <div className="flex flex-col md:flex-row justify-center items-center gap-8 bg-transparent">
+        {loyaltyType && (
+          <div className="flex flex-col items-center bg-transparent">
+            <img
+              src={loyaltyImages[loyaltyType]}
+              alt={loyaltyType}
+              style={imageStyle}
+            />
+            <Button
+              className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-4 px-8 py-6 text-lg"
+              onClick={() => (window.location.href = "#contact")}
+            >
+              Get Your Custom App
+            </Button>
           </div>
-        </div>
-        <div className="flex justify-center">
-          <Button
-            className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] px-8 py-6 text-lg"
-            onClick={() => (window.location.href = "#contact")}
-          >
-            Get Your Custom App
-          </Button>
-        </div>
+        )}
+        {promotionsType && (
+          <div className="flex flex-col items-center bg-transparent">
+            <img
+              src={promotionsImages[promotionsType]}
+              alt={promotionsType}
+              style={imageStyle}
+            />
+            <Button
+              className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-4 px-8 py-6 text-lg"
+              onClick={() => (window.location.href = "#contact")}
+            >
+              Get Your Custom App
+            </Button>
+          </div>
+        )}
+        {receiptsType && (
+          <div className="flex flex-col items-center bg-transparent">
+            <img
+              src={receiptsImages[receiptsType]}
+              alt={receiptsType}
+              style={imageStyle}
+            />
+            <Button
+              className="bg-[#083118] hover:bg-[#083118]/90 text-[#fffff3] mt-4 px-8 py-6 text-lg"
+              onClick={() => (window.location.href = "#contact")}
+            >
+              Get Your Custom App
+            </Button>
+          </div>
+        )}
       </div>
     )
   }
 
-  // Previous code remains the same...
-
-  // Previous code remains the same...
-
-return (
-  <section 
-    id="configurator" 
-    className="w-full py-20 bg-no-repeat min-h-[85vh] flex flex-col justify-center relative overflow-hidden"
-    style={{
-      backgroundImage: "url('/images/background/configurator-bg.png')",
-      backgroundSize: "100% 100%",
-      backgroundPosition: "center"
-    }}
-  >
-    <div className="container px-4 md:px-6 relative z-10">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-[#083118] mb-4">
-          Ever wondered how your app could look? See it in 30 seconds!
-        </h2>
-        <p className="text-[#083118]/70 max-w-2xl mx-auto">
-          Follow these simple steps to visualize your own branded digital service app.
-        </p>
-      </div>
-
-      {!showPreview && renderProgressBar()}
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="py-8"
-        >
-          {showPreview ? renderPreview() : getStepContent()}
-        </motion.div>
-      </AnimatePresence>
-
-      {!showPreview && step > 1 && (
-        <div className="flex justify-center mt-8">
-          <Button variant="outline" className="border-[#083118] text-[#083118]" onClick={handleBack}>
-            Back
-          </Button>
+  return (
+    <section 
+      id="configurator" 
+      className="w-full py-20 bg-no-repeat min-h-[85vh] flex flex-col justify-center relative overflow-hidden"
+      style={{
+        backgroundImage: "url('/images/background/configurator-bg.png')",
+        backgroundSize: "100% 100%",
+        backgroundPosition: "center"
+      }}
+    >
+      <div className="container px-4 md:px-6 relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-[#083118] mb-4">
+            Ever wondered how your app could look? See it in 30 seconds!
+          </h2>
+          <p className="text-[#083118]/70 max-w-2xl mx-auto">
+            Follow these simple steps to visualize your own branded digital service app.
+          </p>
         </div>
-      )}
-    </div>
-  </section>
-)
+
+        {!showPreview && renderProgressBar()}
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="py-8"
+          >
+            {showPreview ? renderPreview() : getStepContent()}
+          </motion.div>
+        </AnimatePresence>
+
+        {!showPreview && step > 1 && (
+          <div className="flex justify-center mt-8">
+            <Button variant="outline" className="border-[#083118] text-[#083118]" onClick={handleBack}>
+              Back
+            </Button>
+          </div>
+        )}
+      </div>
+    </section>
+  )
 }
