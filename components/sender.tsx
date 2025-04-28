@@ -1,6 +1,9 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import axios from "axios";
+import cheerio from "cheerio";
+import { URL } from "url";
 
 interface WebsiteField {
     InputString: string;
@@ -8,15 +11,34 @@ interface WebsiteField {
     onNext: () => void;
 }
 
-function sendData(InputString: string) {
-    const data = {
-        name: InputString
-    };
-    console.log("Data sent:", data);
+async function extractLogo(url: string): Promise<string | null> {
+    try {
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+
+        // Try finding favicon
+        let iconHref = $('link[rel~="icon"]').attr('href');
+        if (iconHref) {
+            return new URL(iconHref, url).href;
+        }
+
+        // Try finding image with "logo" in alt, class, or id
+        let imgLogo = $('img[alt*="logo"], img[class*="logo"], img[id*="logo"]').first();
+        if (imgLogo.length) {
+            let src = imgLogo.attr('src');
+            return new URL(src, url).href;
+        }
+
+        return null;
+    } catch (error) {
+        console.error("Error extracting logo:", error);
+        return null;
+    }
 }
 
 export default function WebsiteSender({ InputString, setInputString, onNext }: WebsiteField) {
     const [error, setError] = useState<string | null>(null);
+    const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
     const validateInput = (input: string) => {
         // Regex to match a valid website format (e.g., anything.domain)
@@ -24,14 +46,33 @@ export default function WebsiteSender({ InputString, setInputString, onNext }: W
         return websiteRegex.test(input);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (validateInput(InputString)) {
             setError(null);
+
+            // Extract logo
+            const formattedUrl = InputString.startsWith("http") ? InputString : `https://${InputString}`;
+            const logo = await extractLogo(formattedUrl);
+            if (logo) {
+                setLogoUrl(logo);
+                console.log("Logo URL:", logo);
+            } else {
+                console.log("No logo found for the website.");
+            }
+
             sendData(InputString);
             onNext();
         } else {
             setError("Please enter a valid website (e.g., example.com).");
         }
+    };
+
+    const sendData = (InputString: string) => {
+        const data = {
+            name: InputString,
+            logo: logoUrl,
+        };
+        console.log("Data sent:", data);
     };
 
     return (
@@ -54,6 +95,12 @@ export default function WebsiteSender({ InputString, setInputString, onNext }: W
                     Next
                 </Button>
             </div>
+            {logoUrl && (
+                <div className="mt-4 text-center">
+                    <p className="text-[#083118]">Extracted Logo:</p>
+                    <img src={logoUrl} alt="Extracted Logo" className="mx-auto max-h-20" />
+                </div>
+            )}
         </div>
     );
 }
