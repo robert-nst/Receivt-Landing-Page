@@ -106,7 +106,7 @@ export default function LeadForm() {
                 className="w-full bg-[#fffff3] text-[#083118] hover:bg-[#fffff3]/90"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Sending..." : "Request a Presentation"}
+                {isSubmitting ? "Sending..." : "Let's talk"}
               </Button>
             </form>
           </div>

@@ -39,7 +39,8 @@ export default function HowItHelps() {
                                 <div className="space-y-4 pt-4">
                                     <p className="text-[#083118]">No coding. No external developers.</p>
                                     <p className="text-[#083118]">
-                                        You go live in days and stay in full control of your customer experience.
+                                        <strong>You go live in days</strong> and stay in full control of your customer
+                                            experience.
                                     </p>
                                 </div>
                             }
@@ -53,7 +54,7 @@ export default function HowItHelps() {
                             content={
                                 <div className="space-y-4 pt-4">
                                     <p className="text-[#083118]">
-                                        Create personalized loyalty programs that keep customers coming back.
+                                        Create personalized loyalty programs that <strong>keep customers coming back</strong>.
                                     </p>
                                     <p className="text-[#083118]">
                                         Implement rewards, points systems, and special promotions to increase retention.
@@ -69,8 +70,9 @@ export default function HowItHelps() {
                             onToggle={handleToggle}
                             content={
                                 <div className="space-y-4 pt-4">
-                                    <p className="text-[#083118]">Eliminate paper receipts and physical loyalty cards.</p>
-                                    <p className="text-[#083118]">Reduce your environmental impact while cutting operational expenses.</p>
+                                    <p className="text-[#083118]">Eliminate paper receipts.</p>
+                                    <p className="text-[#083118]">Reduce your environmental impact while <strong>cutting
+                                        operational expenses</strong>.</p>
                                 </div>
                             }
                         />
@@ -84,7 +86,8 @@ export default function HowItHelps() {
                                 <div className="space-y-4 pt-4">
                                     <p className="text-[#083118]">Track purchasing patterns and customer preferences.</p>
                                     <p className="text-[#083118]">
-                                        Use data-driven insights to optimize your offerings and marketing strategies.
+                                        Use data-driven insights to <strong>optimize your offerings</strong> and
+                                        marketing strategies.
                                     </p>
                                 </div>
                             }
