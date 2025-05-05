@@ -213,10 +213,6 @@ export default function LogoStep({ logo, setLogo, websiteUrl, setWebsiteUrl, pri
                 <Button
                   onClick={handleWebsiteSubmit}
                   disabled={isLoading}
-                  style={{
-                    backgroundColor: primaryColor,
-                    color: "white",
-                  }}
                 >
                   {isLoading ? "Loading..." : "Extract Logo"}
                 </Button>
@@ -241,7 +237,6 @@ export default function LogoStep({ logo, setLogo, websiteUrl, setWebsiteUrl, pri
               <label
                 htmlFor="logo-upload"
                 className="text-lg font-medium cursor-pointer hover:underline"
-                style={{ color: primaryColor }}
               >
                 Click to upload
               </label>

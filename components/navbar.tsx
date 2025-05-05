@@ -67,7 +67,7 @@ export default function Navbar() {
     { name: "Home", href: "#home", id: "home" },
     { name: "Solution", href: "#how-it-helps", id: "how-it-helps" },
     { name: "Features", href: "#features", id: "features" },
-    { name: "Configurator", href: "#configurator", id: "configurator" },
+    { name: "Configurator", href: "#configurator-bg", id: "configurator-bg" },
     { name: "Contact", href: "#contact", id: "contact" },
   ];
 

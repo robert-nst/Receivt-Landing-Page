@@ -83,7 +83,11 @@ export default function Configurator() {
                           }`}
                           style={{
                             backgroundColor:
-                                currentStep === step.id ? primaryColor : currentStep > step.id ? `${primaryColor}80` : "",
+                                currentStep === step.id
+                                    ? "#083118"
+                                    : currentStep > step.id
+                                        ? "#4d805d" // lighter green
+                                        : "",
                           }}
                       ></div>
                   ))}
@@ -152,11 +156,6 @@ export default function Configurator() {
                 <Button
                     onClick={goToNextStep}
                     disabled={!isNextButtonEnabled()}
-                    style={{
-                      backgroundColor: primaryColor,
-                      color: "white",
-                      opacity: isNextButtonEnabled() ? 1 : 0.5,
-                    }}
                 >
                   Next
                   <ArrowRight className="ml-2 h-4 w-4" />
