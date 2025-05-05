@@ -17,6 +17,8 @@ export default function Configurator() {
   const [email, setEmail] = useState("")
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [activeNavItem, setActiveNavItem] = useState("home")
+  const [extractedPrimaryColor, setExtractedPrimaryColor] = useState<string | null>(null)
+  const [extractedSecondaryColor, setExtractedSecondaryColor] = useState<string | null>(null)
 
   const steps = [
     { id: 1, name: "Logo" },
@@ -52,12 +54,17 @@ export default function Configurator() {
   }
 
   return (
-      <section id="configurator" className="container mx-auto px-4 py-12"
-        style={{
-          backgroundImage: "url('/images/background/features-bg.png')",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "center",
-        }}>
+    <section
+      id="configurator-bg"
+      style={{
+        backgroundImage: "url('/images/background/features-bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        width: "100vw",
+        minHeight: "100vh",
+      }}
+    >
+      <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-center mb-12">Loyalty App Preview Generator</h1>
         <div className="rounded-xl shadow-lg overflow-hidden">
           {/* Step indicator */}
@@ -88,23 +95,28 @@ export default function Configurator() {
           {/* Step content */}
           <div className="p-6">
             {currentStep === 1 && (
-                <LogoStep
-                    logo={logo}
-                    setLogo={setLogo}
-                    websiteUrl={websiteUrl}
-                    setWebsiteUrl={setWebsiteUrl}
-                    primaryColor={primaryColor}
-                    setPrimaryColor={setPrimaryColor}
-                    setSecondaryColor={setSecondaryColor}
-                />
+              <LogoStep
+                logo={logo}
+                setLogo={setLogo}
+                websiteUrl={websiteUrl}
+                setWebsiteUrl={setWebsiteUrl}
+                primaryColor={primaryColor}
+                onColorsExtracted={(primary, secondary) => {
+                  console.log("Extracted colors:", primary, secondary);
+                  setPrimaryColor(primary);
+                  setSecondaryColor(secondary);
+                  setExtractedPrimaryColor(primary);
+                  setExtractedSecondaryColor(secondary);
+                }}
+              />
             )}
             {currentStep === 2 && (
-                <ColorStep
-                    primaryColor={primaryColor}
-                    setPrimaryColor={setPrimaryColor}
-                    secondaryColor={secondaryColor}
-                    setSecondaryColor={setSecondaryColor}
-                />
+              <ColorStep
+                primaryColor={primaryColor}
+                setPrimaryColor={setPrimaryColor}
+                secondaryColor={secondaryColor}
+                setSecondaryColor={setSecondaryColor}
+              />
             )}
             {currentStep === 3 && (
                 <EmailStep
@@ -152,6 +164,7 @@ export default function Configurator() {
             )}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   )
 }

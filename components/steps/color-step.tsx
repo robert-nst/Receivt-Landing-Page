@@ -81,9 +81,6 @@ export default function ColorStep({
                 className={`p-4 border rounded-lg hover:shadow-md transition-shadow ${
                   primaryColor === color.primary && secondaryColor === color.secondary ? "ring-2 ring-offset-2" : ""
                 }`}
-                style={{
-                  ringColor: color.primary,
-                }}
               >
                 <div className="flex justify-center gap-2 mb-2">
                   <div className="w-6 h-6 rounded-full" style={{ backgroundColor: color.primary }}></div>
