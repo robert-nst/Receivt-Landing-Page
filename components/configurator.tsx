@@ -65,7 +65,8 @@ export default function Configurator() {
       }}
     >
       <div className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-center mb-12">Loyalty App Preview Generator</h1>
+        <h1 className="text-3xl font-bold text-center mb-12">
+          See in 30 seconds how your app could look like!</h1>
         <div className="rounded-xl shadow-lg overflow-hidden">
           {/* Step indicator */}
           <div className="border-b">
@@ -76,20 +77,19 @@ export default function Configurator() {
                 </h2>
                 <div className="flex gap-2">
                   {steps.map((step) => (
-                      <div
-                          key={step.id}
-                          className={`w-3 h-3 rounded-full ${
-                              currentStep === step.id ? "bg-primary" : currentStep > step.id ? "bg-primary/50" : "bg-gray-200"
-                          }`}
-                          style={{
-                            backgroundColor:
-                                currentStep === step.id
-                                    ? "#083118"
-                                    : currentStep > step.id
-                                        ? "#4d805d" // lighter green
-                                        : "",
-                          }}
-                      ></div>
+                    <div
+                      key={step.id}
+                      className={`w-3 h-3 rounded-full ${currentStep === step.id ? "bg-primary" : currentStep > step.id ? "bg-primary/50" : "bg-gray-200"
+                        }`}
+                      style={{
+                        backgroundColor:
+                          currentStep === step.id
+                            ? "#083118"
+                            : currentStep > step.id
+                              ? "#4d805d" // lighter green
+                              : "",
+                      }}
+                    ></div>
                   ))}
                 </div>
               </div>
@@ -123,43 +123,43 @@ export default function Configurator() {
               />
             )}
             {currentStep === 3 && (
-                <EmailStep
-                    email={email}
-                    setEmail={setEmail}
-                    primaryColor={primaryColor}
-                    secondaryColor={secondaryColor}
-                    setIsEmailValid={setIsEmailValid}
-                />
+              <EmailStep
+                email={email}
+                setEmail={setEmail}
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                setIsEmailValid={setIsEmailValid}
+              />
             )}
             {currentStep === 4 && (
-                <FinalStep
-                    logo={logo}
-                    primaryColor={primaryColor}
-                    secondaryColor={secondaryColor}
-                    email={email}
-                    setPrimaryColor={setPrimaryColor}
-                    setSecondaryColor={setSecondaryColor}
-                    activeNavItem={activeNavItem}
-                    setActiveNavItem={setActiveNavItem}
-                />
+              <FinalStep
+                logo={logo}
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                email={email}
+                setPrimaryColor={setPrimaryColor}
+                setSecondaryColor={setSecondaryColor}
+                activeNavItem={activeNavItem}
+                setActiveNavItem={setActiveNavItem}
+              />
             )}
           </div>
 
           {/* Navigation buttons */}
           <div className="border-t p-6 flex justify-between">
             <Button variant="outline" onClick={goToPreviousStep} disabled={currentStep === 1}>
-              <ArrowLeft className="mr-2 h-4 w-4"/>
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Previous
             </Button>
 
             {currentStep < steps.length && (
-                <Button
-                    onClick={goToNextStep}
-                    disabled={!isNextButtonEnabled()}
-                >
-                  Next
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+              <Button
+                onClick={goToNextStep}
+                disabled={!isNextButtonEnabled()}
+              >
+                Next
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             )}
           </div>
         </div>
