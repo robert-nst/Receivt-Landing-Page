@@ -45,7 +45,7 @@ export default function LogoStep({ logo, setLogo, websiteUrl, setWebsiteUrl, pri
         // Count colors
         const colorCount: Record<string, number> = {};
         for (let i = 0; i < data.length; i += 4) {
-          const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+          const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
           if (a < 128) continue; // skip transparent
           const hex = rgbToHex(r, g, b);
           colorCount[hex] = (colorCount[hex] || 0) + 1;
@@ -116,8 +116,8 @@ export default function LogoStep({ logo, setLogo, websiteUrl, setWebsiteUrl, pri
   }
 
   const validateInput = (input: string) => {
-    // Regex to match a valid website format (e.g., anything.domain)
-    const websiteRegex = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/
+    // Regex to match valid website formats: https://www.example.domain, example.domain, www.example.domain
+    const websiteRegex = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/
     return websiteRegex.test(input)
   }
 
@@ -185,14 +185,14 @@ export default function LogoStep({ logo, setLogo, websiteUrl, setWebsiteUrl, pri
       <Tabs defaultValue="download" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-8">
           <TabsTrigger
-              value="download"
-              className="data-[state=active]:bg-[#0F4D2B] data-[state=active]:text-white"
+            value="download"
+            className="data-[state=active]:bg-[#0F4D2B] data-[state=active]:text-white"
           >
             Download from URL
           </TabsTrigger>
           <TabsTrigger
-              value="upload"
-              className="data-[state=active]:bg-[#0F4D2B] data-[state=active]:text-white"
+            value="upload"
+            className="data-[state=active]:bg-[#0F4D2B] data-[state=active]:text-white"
           >
             Upload Logo
           </TabsTrigger>
@@ -224,9 +224,8 @@ export default function LogoStep({ logo, setLogo, websiteUrl, setWebsiteUrl, pri
 
         <TabsContent value="upload" className="space-y-4">
           <div
-            className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-12 text-center ${
-              isDragging ? "border-primary bg-primary/5" : "border-gray-300"
-            }`}
+            className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-12 text-center ${isDragging ? "border-primary bg-primary/5" : "border-gray-300"
+              }`}
             style={{ borderColor: isDragging ? primaryColor : "" }}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
