@@ -44,3 +44,66 @@ export async function addEmailToFirebase(encryptedEmail: string) {
         throw error
     }
 }
+
+/**
+ * Adds a lead form submission to the Firebase Firestore database
+ * @param leadData - The lead form data to store
+ * @returns A promise that resolves when the data is added
+ */
+export async function addLeadToFirebase(leadData: {
+    companyName: string;
+    email: string;
+    phone?: string;
+    message: string;
+}) {
+    try {
+        // Ensure the user is authenticated
+        const auth = getAuth(app)
+        if (!auth.currentUser) {
+            await signInAnonymously(auth)
+        }
+
+        const leadsCollection = collection(db, "leads")
+
+        await addDoc(leadsCollection, {
+            ...leadData,
+            createdAt: serverTimestamp(),
+        })
+
+        console.log("Lead data added to Firebase successfully")
+        return true
+    } catch (error) {
+        console.error("Error adding lead data to Firebase:", error)
+        throw error
+    }
+}
+
+/**
+ * Adds a website information to the Firebase Firestore database
+ * @param websiteData - The website data to store
+ * @returns A promise that resolves when the data is added
+ */
+export async function addWebsiteToFirebase(websiteData: {
+    url: string;
+}) {
+    try {
+        // Ensure the user is authenticated
+        const auth = getAuth(app)
+        if (!auth.currentUser) {
+            await signInAnonymously(auth)
+        }
+
+        const websitesCollection = collection(db, "websites")
+
+        await addDoc(websitesCollection, {
+            ...websiteData,
+            createdAt: serverTimestamp(),
+        })
+
+        console.log("Website data added to Firebase successfully")
+        return true
+    } catch (error) {
+        console.error("Error adding website data to Firebase:", error)
+        throw error
+    }
+}

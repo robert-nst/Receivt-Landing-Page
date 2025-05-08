@@ -7,6 +7,7 @@ import Features from "@/components/features"
 import Configurator from "@/components/configurator";
 import LeadForm from "@/components/lead-form"
 import Analytics from "./analytics";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Features />
       <Configurator />
       <LeadForm />
+      <Footer />
     </main>
   )
 }

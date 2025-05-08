@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { trackEvent, GA_EVENTS } from "@/lib/analytics";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,10 +22,13 @@ export default function Navbar() {
 
       // Check if the user is at the bottom of the page
       const isBottom =
-          window.innerHeight + window.scrollY >= document.body.offsetHeight - 1;
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 1;
 
       if (isBottom) {
-        setActiveSection("contact");
+        if (activeSection !== "contact") {
+          setActiveSection("contact");
+          trackEvent(GA_EVENTS.SECTION_VIEW, { section: "contact", trigger: "scroll" });
+        }
         return;
       }
 
@@ -36,7 +40,10 @@ export default function Navbar() {
           const offsetTop = rect.top + window.pageYOffset - navbarHeight;
 
           if (window.scrollY >= offsetTop && window.scrollY < offsetTop + element.offsetHeight) {
-            setActiveSection(section);
+            if (activeSection !== section) {
+              setActiveSection(section);
+              trackEvent(GA_EVENTS.SECTION_VIEW, { section, trigger: "scroll" });
+            }
             break;
           }
         }
@@ -45,10 +52,14 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [activeSection]);
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
+    trackEvent(GA_EVENTS.NAVIGATION_CLICK, {
+      section: sectionId,
+      trigger: "click"
+    });
 
     const element = document.getElementById(sectionId);
     if (element) {
@@ -72,93 +83,83 @@ export default function Navbar() {
   ];
 
   return (
-      <header
-          className={cn(
-              "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300",
-              scrolled ? "bg-white shadow-sm pt-2 pb-2" : "bg-transparent pt-4 pb-4"
-          )}
-      >
-        <div className="container mx-auto px-6 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <div className="flex-shrink-0 relative w-32 h-16">
-              <button
-                  onClick={() => scrollToSection("home")}
-                  className="flex items-center focus:outline-none"
-              >
-                <Image
-                    src="/logo.png"
-                    alt="Logo"
-                    fill
-                    className="object-contain"
-                    priority
-                />
-              </button>
-            </div>
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled ? "bg-white shadow-md" : "bg-transparent"
+      )}
+    >
+      <nav className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/logo.png"
+              alt="Receivt Logo"
+              width={120}
+              height={40}
+              className="h-8 w-auto"
+            />
+          </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex md:space-x-8">
-              {navLinks.map((link) => (
-                  <button
-                      key={link.id}
-                      onClick={() => scrollToSection(link.id)}
-                      className={cn(
-                          "inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors duration-200 focus:outline-none",
-                          activeSection === link.id
-                              ? "font-bold text-[#083118]"
-                              : "text-[#083118]/70 hover:text-[#083118]/90"
-                      )}
-                  >
-                    {link.name}
-                  </button>
-              ))}
-            </nav>
-
-            {/* Mobile menu button */}
-            <div className="flex md:hidden">
-              <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-md p-2 text-[#083118]/70 hover:bg-[#083118]/10 hover:text-[#083118] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#083118]/50"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <span className="sr-only">Open main menu</span>
-                {isMenuOpen ? (
-                    <X className="block h-6 w-6" aria-hidden="true" />
-                ) : (
-                    <Menu className="block h-6 w-6" aria-hidden="true" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        <div className={`${isMenuOpen ? "block" : "hidden"} md:hidden`}>
-          <div
-              className={cn(
-                  "space-y-1 px-2 pb-3 pt-2 rounded-lg mt-2 mx-6",
-                  scrolled ? "bg-white" : "backdrop-blur-sm bg-white/30"
-              )}
-          >
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-                <button
-                    key={link.id}
-                    onClick={() => {
-                      scrollToSection(link.id);
-                      setIsMenuOpen(false);
-                    }}
-                    className={cn(
-                        "block w-full text-left px-3 py-2 rounded-md text-base font-medium focus:outline-none",
-                        activeSection === link.id
-                            ? "bg-transparent text-[#083118] font-bold"
-                            : "text-[#083118]/70 hover:text-[#083118]"
-                    )}
-                >
-                  {link.name}
-                </button>
+              <button
+                key={link.id}
+                onClick={() => scrollToSection(link.id)}
+                className={cn(
+                  "text-sm font-medium transition-colors",
+                  activeSection === link.id
+                    ? "text-[#083118]"
+                    : "text-gray-600 hover:text-[#083118]"
+                )}
+              >
+                {link.name}
+              </button>
             ))}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => {
+              setIsMenuOpen(!isMenuOpen);
+              trackEvent(GA_EVENTS.NAVIGATION_CLICK, {
+                action: isMenuOpen ? "close_menu" : "open_menu"
+              });
+            }}
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6 text-[#083118]" />
+            ) : (
+              <Menu className="h-6 w-6 text-[#083118]" />
+            )}
+          </button>
         </div>
-      </header>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden mt-4 py-4 border-t">
+            {navLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => {
+                  scrollToSection(link.id);
+                  setIsMenuOpen(false);
+                }}
+                className={cn(
+                  "block w-full text-left px-4 py-2 text-sm font-medium transition-colors",
+                  activeSection === link.id
+                    ? "text-[#083118]"
+                    : "text-gray-600 hover:text-[#083118]"
+                )}
+              >
+                {link.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </nav>
+    </header>
   );
 }

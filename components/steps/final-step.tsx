@@ -375,9 +375,6 @@ export default function FinalStep({
             <div>
               <span className="font-medium">Secondary Color:</span> {secondaryColor}
             </div>
-            <div>
-              <span className="font-medium">Email:</span> {email || "Not provided"}
-            </div>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import LogoStep from "@/components/steps/logo-step"
 import ColorStep from "@/components/steps/color-step"
 import EmailStep from "@/components/steps/email-step"
 import FinalStep from "@/components/steps/final-step"
+import { trackEvent, GA_EVENTS } from "@/lib/analytics"
 
 export default function Configurator() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -29,13 +30,25 @@ export default function Configurator() {
 
   const goToNextStep = () => {
     if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1)
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      trackEvent(GA_EVENTS.CONFIGURATOR_STEP_CHANGE, {
+        from_step: currentStep,
+        to_step: nextStep,
+        step_name: steps[nextStep - 1].name
+      });
     }
   }
 
   const goToPreviousStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      trackEvent(GA_EVENTS.CONFIGURATOR_STEP_CHANGE, {
+        from_step: currentStep,
+        to_step: prevStep,
+        step_name: steps[prevStep - 1].name
+      });
     }
   }
 
@@ -53,114 +66,133 @@ export default function Configurator() {
     }
   }
 
+  const handleColorChange = (primary: string, secondary: string) => {
+    setPrimaryColor(primary);
+    setSecondaryColor(secondary);
+    trackEvent(GA_EVENTS.CONFIGURATOR_COLOR_CHANGE, {
+      primary_color: primary,
+      secondary_color: secondary,
+      step: currentStep
+    });
+  }
+
   return (
     <section
       id="configurator-bg"
+      className="w-full pt-20 pb-10 bg-no-repeat bg-cover bg-center"
       style={{
-        backgroundImage: "url('/images/background/features-bg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        width: "100vw",
-        minHeight: "100vh",
+        backgroundImage: "url('/images/background/configurator-bg.png')",
+        backgroundSize: "100% 100%"
       }}
     >
-      <div className="container mx-auto px-4 py-12">
+      <div className="container px-4 md:px-6">
         <h1 className="text-3xl font-bold text-center mb-12">
           See in 30 seconds how your app could look like!</h1>
-        <div className="rounded-xl shadow-lg overflow-hidden">
-          {/* Step indicator */}
-          <div className="border-b">
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">
-                  Step {currentStep} of {steps.length}: {steps[currentStep - 1].name}
-                </h2>
-                <div className="flex gap-2">
-                  {steps.map((step) => (
-                    <div
-                      key={step.id}
-                      className={`w-3 h-3 rounded-full ${currentStep === step.id ? "bg-primary" : currentStep > step.id ? "bg-primary/50" : "bg-gray-200"
-                        }`}
-                      style={{
-                        backgroundColor:
-                          currentStep === step.id
-                            ? "#083118"
-                            : currentStep > step.id
-                              ? "#4d805d" // lighter green
-                              : "",
-                      }}
-                    ></div>
-                  ))}
-                </div>
+        <div className="mx-auto max-w-3xl">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            {/* Progress bar */}
+            <div className="p-4 bg-gray-50 border-b">
+              <div className="flex justify-between mb-2">
+                {steps.map((step) => (
+                  <div
+                    key={step.id}
+                    className={`flex-1 text-center ${step.id === currentStep
+                      ? "text-[#083118] font-medium"
+                      : step.id < currentStep
+                        ? "text-green-600"
+                        : "text-gray-400"
+                      }`}
+                  >
+                  </div>
+                ))}
+              </div>
+              <div className="h-2 bg-gray-200 rounded-full">
+                <div
+                  className="h-full bg-[#083118] rounded-full transition-all duration-300"
+                  style={{
+                    width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
+                  }}
+                />
               </div>
             </div>
-          </div>
 
-          {/* Step content */}
-          <div className="p-6">
-            {currentStep === 1 && (
-              <LogoStep
-                logo={logo}
-                setLogo={setLogo}
-                websiteUrl={websiteUrl}
-                setWebsiteUrl={setWebsiteUrl}
-                primaryColor={primaryColor}
-                onColorsExtracted={(primary, secondary) => {
-                  console.log("Extracted colors:", primary, secondary);
-                  setPrimaryColor(primary);
-                  setSecondaryColor(secondary);
-                  setExtractedPrimaryColor(primary);
-                  setExtractedSecondaryColor(secondary);
-                }}
-              />
-            )}
-            {currentStep === 2 && (
-              <ColorStep
-                primaryColor={primaryColor}
-                setPrimaryColor={setPrimaryColor}
-                secondaryColor={secondaryColor}
-                setSecondaryColor={setSecondaryColor}
-              />
-            )}
-            {currentStep === 3 && (
-              <EmailStep
-                email={email}
-                setEmail={setEmail}
-                primaryColor={primaryColor}
-                secondaryColor={secondaryColor}
-                setIsEmailValid={setIsEmailValid}
-              />
-            )}
-            {currentStep === 4 && (
-              <FinalStep
-                logo={logo}
-                primaryColor={primaryColor}
-                secondaryColor={secondaryColor}
-                email={email}
-                setPrimaryColor={setPrimaryColor}
-                setSecondaryColor={setSecondaryColor}
-                activeNavItem={activeNavItem}
-                setActiveNavItem={setActiveNavItem}
-              />
-            )}
-          </div>
+            <div className="p-6">
+              {currentStep === 1 && (
+                <LogoStep
+                  logo={logo}
+                  setLogo={(newLogo) => {
+                    setLogo(newLogo);
+                    if (newLogo) {
+                      trackEvent(GA_EVENTS.CONFIGURATOR_LOGO_UPLOAD, {
+                        logo_type: newLogo.startsWith('data:') ? 'uploaded' : 'url'
+                      });
+                    }
+                  }}
+                  websiteUrl={websiteUrl}
+                  setWebsiteUrl={(url) => {
+                    setWebsiteUrl(url);
+                    if (url) {
+                      trackEvent(GA_EVENTS.CONFIGURATOR_WEBSITE_ENTER, {
+                        website_url: url
+                      });
+                    }
+                  }}
+                  primaryColor={primaryColor}
+                  onColorsExtracted={(primary, secondary) => {
+                    console.log("Extracted colors:", primary, secondary);
+                    handleColorChange(primary, secondary);
+                    setExtractedPrimaryColor(primary);
+                    setExtractedSecondaryColor(secondary);
+                  }}
+                />
+              )}
+              {currentStep === 2 && (
+                <ColorStep
+                  primaryColor={primaryColor}
+                  setPrimaryColor={(color) => handleColorChange(color, secondaryColor)}
+                  secondaryColor={secondaryColor}
+                  setSecondaryColor={(color) => handleColorChange(primaryColor, color)}
+                />
+              )}
+              {currentStep === 3 && (
+                <EmailStep
+                  email={email}
+                  setEmail={setEmail}
+                  primaryColor={primaryColor}
+                  secondaryColor={secondaryColor}
+                  setIsEmailValid={setIsEmailValid}
+                />
+              )}
+              {currentStep === 4 && (
+                <FinalStep
+                  logo={logo}
+                  primaryColor={primaryColor}
+                  secondaryColor={secondaryColor}
+                  email={email}
+                  setPrimaryColor={(color) => handleColorChange(color, secondaryColor)}
+                  setSecondaryColor={(color) => handleColorChange(primaryColor, color)}
+                  activeNavItem={activeNavItem}
+                  setActiveNavItem={setActiveNavItem}
+                />
+              )}
+            </div>
 
-          {/* Navigation buttons */}
-          <div className="border-t p-6 flex justify-between">
-            <Button variant="outline" onClick={goToPreviousStep} disabled={currentStep === 1}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Previous
-            </Button>
-
-            {currentStep < steps.length && (
-              <Button
-                onClick={goToNextStep}
-                disabled={!isNextButtonEnabled()}
-              >
-                Next
-                <ArrowRight className="ml-2 h-4 w-4" />
+            <div className="border-t p-6 flex justify-between">
+              <Button variant="outline" onClick={goToPreviousStep} disabled={currentStep === 1}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Previous
               </Button>
-            )}
+
+              {currentStep < steps.length && (
+                <Button
+                  onClick={goToNextStep}
+                  disabled={!isNextButtonEnabled()}
+                >
+                  Next
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>

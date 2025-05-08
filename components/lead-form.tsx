@@ -8,6 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import { addLeadToFirebase } from "@/lib/firebase"
+import { Checkbox } from "@/components/ui/checkbox"
+import { PrivacyPolicyDialog } from "@/components/privacy-policy-dialog"
+import { trackEvent, GA_EVENTS } from "@/lib/analytics"
 
 export default function LeadForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +20,7 @@ export default function LeadForm() {
     phone: "",
     message: "",
   })
+  const [gdprConsent, setGdprConsent] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -23,13 +28,33 @@ export default function LeadForm() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFocus = (fieldName: string) => {
+    trackEvent(GA_EVENTS.FORM_FIELD_FOCUS, { field_name: fieldName });
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!gdprConsent) {
+      trackEvent(GA_EVENTS.FORM_ERROR, { error_type: 'gdpr_consent_required' });
+      toast({
+        title: "GDPR Consent Required",
+        description: "Please accept the privacy policy to continue.",
+        variant: "destructive",
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      })
+      return
+    }
+
     setIsSubmitting(true)
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false)
+    try {
+      await addLeadToFirebase(formData)
+      trackEvent(GA_EVENTS.FORM_SUBMIT, {
+        form_type: 'lead_form',
+        company_name: formData.companyName ? 'provided' : 'not_provided',
+        phone_provided: !!formData.phone
+      });
       toast({
         title: "Form submitted successfully!",
         description: "We'll get back to you shortly.",
@@ -41,7 +66,21 @@ export default function LeadForm() {
         phone: "",
         message: "",
       })
-    }, 1500)
+      setGdprConsent(false)
+    } catch (error) {
+      trackEvent(GA_EVENTS.FORM_ERROR, {
+        form_type: 'lead_form',
+        error_type: 'submission_failed'
+      });
+      toast({
+        title: "Error submitting form",
+        description: "Please try again later.",
+        variant: "destructive",
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -67,6 +106,7 @@ export default function LeadForm() {
                     className="bg-[#fffff3]/10 border-[#fffff3]/20 text-[#fffff3] placeholder:text-[#fffff3]/50"
                     value={formData.companyName}
                     onChange={handleChange}
+                    onFocus={() => handleFocus('company_name')}
                     required
                   />
                 </div>
@@ -78,6 +118,7 @@ export default function LeadForm() {
                     className="bg-[#fffff3]/10 border-[#fffff3]/20 text-[#fffff3] placeholder:text-[#fffff3]/50"
                     value={formData.email}
                     onChange={handleChange}
+                    onFocus={() => handleFocus('email')}
                     required
                   />
                 </div>
@@ -89,6 +130,7 @@ export default function LeadForm() {
                   className="bg-[#fffff3]/10 border-[#fffff3]/20 text-[#fffff3] placeholder:text-[#fffff3]/50"
                   value={formData.phone}
                   onChange={handleChange}
+                  onFocus={() => handleFocus('phone')}
                 />
               </div>
               <div className="space-y-2">
@@ -98,8 +140,34 @@ export default function LeadForm() {
                   className="min-h-[120px] bg-[#fffff3]/10 border-[#fffff3]/20 text-[#fffff3] placeholder:text-[#fffff3]/50"
                   value={formData.message}
                   onChange={handleChange}
+                  onFocus={() => handleFocus('message')}
                   required
                 />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="gdpr"
+                  checked={gdprConsent}
+                  onCheckedChange={(checked) => {
+                    setGdprConsent(checked as boolean);
+                    if (checked) {
+                      trackEvent(GA_EVENTS.FORM_FIELD_FOCUS, { field_name: 'gdpr_consent' });
+                    }
+                  }}
+                  className="border-[#fffff3]/20 data-[state=checked]:bg-[#fffff3] data-[state=checked]:text-[#083118]"
+                />
+                <div className="text-sm text-[#fffff3]/80 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  I agree to the{" "}
+                  <PrivacyPolicyDialog>
+                    <span
+                      className="underline hover:text-[#fffff3] cursor-pointer"
+                      onClick={() => trackEvent(GA_EVENTS.PRIVACY_POLICY_VIEW, { source: 'lead_form' })}
+                    >
+                      privacy policy
+                    </span>
+                  </PrivacyPolicyDialog>{" "}
+                  and consent to the processing of my personal data.
+                </div>
               </div>
               <Button
                 type="submit"

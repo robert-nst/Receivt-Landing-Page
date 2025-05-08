@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FastAverageColor } from "fast-average-color"
+import { saveWebsite } from "@/app/actions"
 
 interface LogoStepProps {
   logo: string | null
@@ -168,6 +169,7 @@ export default function LogoStep({ logo, setLogo, websiteUrl, setWebsiteUrl, pri
       setLogoError(null)
       const formattedUrl = websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`
       await handleLogoExtraction(formattedUrl)
+      saveWebsite({ url: formattedUrl });
     } else {
       setLogoError("Please enter a valid website (e.g., example.com).")
     }
