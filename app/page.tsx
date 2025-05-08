@@ -6,10 +6,12 @@ import HowItHelps from "@/components/how-it-helps"
 import Features from "@/components/features"
 import Configurator from "@/components/configurator";
 import LeadForm from "@/components/lead-form"
+import Analytics from "./analytics";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#fffff3]">
+      <Analytics />
       <Navbar />
       <Hero />
       <HowItHelps />
