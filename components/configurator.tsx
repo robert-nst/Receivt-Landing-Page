@@ -61,14 +61,19 @@ export default function Configurator() {
         return true // Always enabled for colors
       case 3: // Email step
         return isEmailValid
+        // return true
       default:
         return true
     }
   }
 
   const handleColorChange = (primary: string, secondary: string) => {
-    setPrimaryColor(primary);
-    setSecondaryColor(secondary);
+    if(primary != "") {
+      setPrimaryColor(primary);
+    }
+    if(secondary != "") {
+      setSecondaryColor(secondary);
+    }
     trackEvent(GA_EVENTS.CONFIGURATOR_COLOR_CHANGE, {
       primary_color: primary,
       secondary_color: secondary,
@@ -149,9 +154,9 @@ export default function Configurator() {
               {currentStep === 2 && (
                 <ColorStep
                   primaryColor={primaryColor}
-                  setPrimaryColor={(color) => handleColorChange(color, secondaryColor)}
+                  setPrimaryColor={(color) => handleColorChange(color, "")}
                   secondaryColor={secondaryColor}
-                  setSecondaryColor={(color) => handleColorChange(primaryColor, color)}
+                  setSecondaryColor={(color) => handleColorChange("", color)}
                 />
               )}
               {currentStep === 3 && (
@@ -169,8 +174,8 @@ export default function Configurator() {
                   primaryColor={primaryColor}
                   secondaryColor={secondaryColor}
                   email={email}
-                  setPrimaryColor={(color) => handleColorChange(color, secondaryColor)}
-                  setSecondaryColor={(color) => handleColorChange(primaryColor, color)}
+                  setPrimaryColor={(color) => handleColorChange(color, "")}
+                  setSecondaryColor={(color) => handleColorChange( "", color)}
                   activeNavItem={activeNavItem}
                   setActiveNavItem={setActiveNavItem}
                 />
