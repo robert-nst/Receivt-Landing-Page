@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+      {
+        "source": "/admin/:path",
+        "destination": "https://receivt-admin-portal.vercel.app/:path"
+      }
+    ]
+}
