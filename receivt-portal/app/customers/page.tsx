@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Download, Filter, Search, UserPlus } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PageHeader } from "../components/page-header"
 import { useLanguage } from "../contexts/language-context"
+import {getTiers} from "@/lib/firebase";
 
 // Mock data for customers
 const customers = [
@@ -17,7 +18,6 @@ const customers = [
     id: "CUST-001",
     name: "John Smith",
     email: "john.smith@example.com",
-    totalVisits: 12,
     pointsBalance: 450,
     tier: "Gold",
     joinDate: "2023-01-15",
@@ -26,7 +26,6 @@ const customers = [
     id: "CUST-002",
     name: "Sarah Johnson",
     email: "sarah.j@example.com",
-    totalVisits: 8,
     pointsBalance: 320,
     tier: "Silver",
     joinDate: "2023-02-20",
@@ -35,7 +34,6 @@ const customers = [
     id: "CUST-003",
     name: "Michael Brown",
     email: "m.brown@example.com",
-    totalVisits: 5,
     pointsBalance: 180,
     tier: "Bronze",
     joinDate: "2023-03-10",
@@ -44,7 +42,6 @@ const customers = [
     id: "CUST-004",
     name: "Emily Davis",
     email: "emily.d@example.com",
-    totalVisits: 15,
     pointsBalance: 580,
     tier: "Gold",
     joinDate: "2022-11-05",
@@ -53,7 +50,6 @@ const customers = [
     id: "CUST-005",
     name: "Robert Wilson",
     email: "r.wilson@example.com",
-    totalVisits: 3,
     pointsBalance: 90,
     tier: "Bronze",
     joinDate: "2023-04-18",
@@ -62,7 +58,6 @@ const customers = [
     id: "CUST-006",
     name: "Jennifer Lee",
     email: "j.lee@example.com",
-    totalVisits: 10,
     pointsBalance: 410,
     tier: "Silver",
     joinDate: "2023-01-30",
@@ -71,7 +66,6 @@ const customers = [
     id: "CUST-007",
     name: "David Miller",
     email: "d.miller@example.com",
-    totalVisits: 7,
     pointsBalance: 280,
     tier: "Silver",
     joinDate: "2023-02-15",
@@ -80,7 +74,6 @@ const customers = [
     id: "CUST-008",
     name: "Lisa Anderson",
     email: "l.anderson@example.com",
-    totalVisits: 20,
     pointsBalance: 750,
     tier: "Gold",
     joinDate: "2022-09-22",
@@ -90,6 +83,7 @@ const customers = [
 export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const { t } = useLanguage()
+  const [dataTiers, setDataTiers] = useState([])
 
   const filteredCustomers = customers.filter(
     (customer) =>
@@ -97,6 +91,15 @@ export default function CustomersPage() {
       customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.id.toLowerCase().includes(searchTerm.toLowerCase()),
   )
+
+  useEffect(() => {
+    const getTiersData = async () => {
+      const dataTiers = await getTiers()
+      setDataTiers(dataTiers)
+    }
+
+    getTiersData()
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -143,7 +146,6 @@ export default function CustomersPage() {
                     <TableHead>{t("customers.customerId")}</TableHead>
                     <TableHead>{t("customers.name")}</TableHead>
                     <TableHead className="hidden md:table-cell">{t("customers.email")}</TableHead>
-                    <TableHead>{t("customers.totalVisits")}</TableHead>
                     <TableHead>{t("customers.pointsBalance")}</TableHead>
                     <TableHead className="hidden md:table-cell">{t("customers.tier")}</TableHead>
                     <TableHead className="hidden md:table-cell">{t("customers.joinDate")}</TableHead>
@@ -151,34 +153,42 @@ export default function CustomersPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredCustomers.map((customer) => (
-                    <TableRow key={customer.id}>
-                      <TableCell className="font-medium">{customer.id}</TableCell>
-                      <TableCell>{customer.name}</TableCell>
-                      <TableCell className="hidden md:table-cell">{customer.email}</TableCell>
-                      <TableCell>{customer.totalVisits}</TableCell>
-                      <TableCell>{customer.pointsBalance}</TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <span
-                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                            customer.tier === "Gold"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : customer.tier === "Silver"
-                                ? "bg-gray-100 text-gray-800"
-                                : "bg-amber-100 text-amber-800"
-                          }`}
-                        >
-                          {customer.tier}
-                        </span>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">{customer.joinDate}</TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
-                          {t("customers.view")}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {filteredCustomers.map((customer) => {
+                    let tier = "";
+                    let tierStyle = "";
+
+                    if (customer.pointsBalance >= 1000) {
+                      tier = "Gold";
+                      tierStyle = "bg-yellow-100 text-yellow-800";
+                    } else if (customer.pointsBalance >= 500) {
+                      tier = "Silver";
+                      tierStyle = "bg-gray-100 text-gray-800";
+                    } else {
+                      tier = "Bronze";
+                      tierStyle = "bg-amber-100 text-amber-800";
+                    }
+                    return (
+                        <TableRow key={customer.id}>
+                          <TableCell className="font-medium">{customer.id}</TableCell>
+                          <TableCell>{customer.name}</TableCell>
+                          <TableCell className="hidden md:table-cell">{customer.email}</TableCell>
+                          <TableCell>{customer.pointsBalance}</TableCell>
+                          <TableCell className="hidden md:table-cell">
+                          <span
+                              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tierStyle}`}
+                          >
+                            {tier}
+                          </span>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">{customer.joinDate}</TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="ghost" size="sm">
+                              {t("customers.view")}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>

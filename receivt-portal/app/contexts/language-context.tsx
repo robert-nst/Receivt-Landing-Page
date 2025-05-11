@@ -152,7 +152,7 @@ const translations: Record<Language, Record<string, string>> = {
     "loyalty.level3": "Level 3",
 
     // Campaigns
-    campaigns: "Campaigns",
+    campaigns: "Offers",
     "campaigns.description": "Create and manage marketing campaigns",
     "campaigns.newCampaign": "New Campaign",
     "campaigns.searchCampaigns": "Search campaigns...",
@@ -290,7 +290,7 @@ const translations: Record<Language, Record<string, string>> = {
     "sidebar.receipts": "Receipts",
     "sidebar.customers": "Customers",
     "sidebar.loyaltyProgram": "Loyalty Program",
-    "sidebar.campaigns": "Campaigns",
+    "sidebar.campaigns": "Offers",
     "sidebar.analytics": "Analytics",
     "sidebar.settings": "Settings",
     "sidebar.logout": "Log out",
@@ -427,7 +427,7 @@ const translations: Record<Language, Record<string, string>> = {
     "loyalty.level3": "Nivel 3",
 
     // Campaigns
-    campaigns: "Campanii",
+    campaigns: "Oferte",
     "campaigns.description": "Creați și gestionați campanii de marketing",
     "campaigns.newCampaign": "Campanie nouă",
     "campaigns.searchCampaigns": "Caută campanii...",
@@ -565,7 +565,7 @@ const translations: Record<Language, Record<string, string>> = {
     "sidebar.receipts": "Chitanțe",
     "sidebar.customers": "Clienți",
     "sidebar.loyaltyProgram": "Program de fidelitate",
-    "sidebar.campaigns": "Campanii",
+    "sidebar.campaigns": "Oferte",
     "sidebar.analytics": "Analiză",
     "sidebar.settings": "Setări",
     "sidebar.logout": "Deconectare",

@@ -20,7 +20,6 @@ const receipts = [
     email: "john.smith@example.com",
     date: "2023-05-10",
     amount: "$125.99",
-    status: "Processed",
     items: 3,
   },
   {
@@ -29,7 +28,6 @@ const receipts = [
     email: "sarah.j@example.com",
     date: "2023-05-09",
     amount: "$78.50",
-    status: "Processed",
     items: 2,
   },
   {
@@ -38,7 +36,6 @@ const receipts = [
     email: "m.brown@example.com",
     date: "2023-05-08",
     amount: "$245.00",
-    status: "Pending",
     items: 5,
   },
   {
@@ -47,7 +44,6 @@ const receipts = [
     email: "emily.d@example.com",
     date: "2023-05-07",
     amount: "$32.99",
-    status: "Processed",
     items: 1,
   },
   {
@@ -56,7 +52,6 @@ const receipts = [
     email: "r.wilson@example.com",
     date: "2023-05-06",
     amount: "$189.75",
-    status: "Failed",
     items: 4,
   },
   {
@@ -65,7 +60,6 @@ const receipts = [
     email: "j.lee@example.com",
     date: "2023-05-05",
     amount: "$56.25",
-    status: "Processed",
     items: 2,
   },
   {
@@ -74,7 +68,6 @@ const receipts = [
     email: "d.miller@example.com",
     date: "2023-05-04",
     amount: "$112.50",
-    status: "Processed",
     items: 3,
   },
   {
@@ -83,7 +76,6 @@ const receipts = [
     email: "l.anderson@example.com",
     date: "2023-05-03",
     amount: "$67.80",
-    status: "Pending",
     items: 2,
   },
 ]
@@ -132,17 +124,6 @@ export default function ReceiptsPage() {
                     <span>{t("receipts.filter")}</span>
                   </Button>
                 </div>
-                <Select defaultValue="all">
-                  <SelectTrigger className="w-[130px] h-8">
-                    <SelectValue placeholder={t("receipts.status")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t("receipts.allStatus")}</SelectItem>
-                    <SelectItem value="processed">{t("receipts.processed")}</SelectItem>
-                    <SelectItem value="pending">{t("receipts.pending")}</SelectItem>
-                    <SelectItem value="failed">{t("receipts.failed")}</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -154,7 +135,6 @@ export default function ReceiptsPage() {
                     <TableHead className="hidden md:table-cell">{t("receipts.email")}</TableHead>
                     <TableHead>{t("receipts.date")}</TableHead>
                     <TableHead>{t("receipts.amount")}</TableHead>
-                    <TableHead>{t("receipts.status")}</TableHead>
                     <TableHead className="hidden md:table-cell">{t("receipts.items")}</TableHead>
                     <TableHead className="text-right">{t("receipts.actions")}</TableHead>
                   </TableRow>
@@ -167,19 +147,6 @@ export default function ReceiptsPage() {
                       <TableCell className="hidden md:table-cell">{receipt.email}</TableCell>
                       <TableCell>{receipt.date}</TableCell>
                       <TableCell>{receipt.amount}</TableCell>
-                      <TableCell>
-                        <span
-                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                            receipt.status === "Processed"
-                              ? "bg-green-100 text-green-800"
-                              : receipt.status === "Pending"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {receipt.status}
-                        </span>
-                      </TableCell>
                       <TableCell className="hidden md:table-cell">{receipt.items}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm">

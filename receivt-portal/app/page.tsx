@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PageHeader } from "./components/page-header"
 import { StatCard } from "./components/stat-card"
 import { useLanguage } from "./contexts/language-context"
+import {getTotalPointsForAllUsers, getTotalUsersFromDatabase} from "@/lib/firebase";
 
 // Mock data for the charts
 const revenueData = [
@@ -39,11 +40,26 @@ const engagementData = [
 
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false)
+  const [totalUsers, setTotalUsers] = useState<number | null>(null);
+  const [totalLoyaltyPoints, setTotalLoyaltyPoints] = useState<number | null>(null);
   const { t } = useLanguage()
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+
+    const fetchTotalUsers = async () => {
+      const total = await getTotalUsersFromDatabase();
+      setTotalUsers(total);
+    };
+
+    const fetchTotalLoyaltyPoints = async () => {
+        const totalPoints = await getTotalPointsForAllUsers();
+        setTotalLoyaltyPoints(totalPoints);
+    }
+
+    fetchTotalUsers();
+    fetchTotalLoyaltyPoints();
+  }, []);
 
   if (!mounted) return null
 
@@ -72,7 +88,7 @@ export default function Dashboard() {
           <StatCard
             title={t("dashboard.totalCustomers")}
             //numar clienti care au aplicatie
-            value="543"
+            value={totalUsers !== null ? totalUsers.toString() : "Loading..."}
             icon={<Users className="h-5 w-5" />}
             description={t("dashboard.vsPreviousMonth")}
             //aici trebuie functie care calculeaza trendul
@@ -92,7 +108,7 @@ export default function Dashboard() {
           <StatCard
             title={t("dashboard.pointsAwarded")}
             // de pus valoare nemockuita
-            value="8.902"
+            value={totalLoyaltyPoints !== null ? totalLoyaltyPoints.toString() : "Loading..."}
             icon={<ArrowUpRight className="h-5 w-5" />}
             description={t("dashboard.vsPreviousMonth")}
             trend={{ value: 15, isPositive: true }}

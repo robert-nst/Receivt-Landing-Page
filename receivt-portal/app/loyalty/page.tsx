@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { motion } from "framer-motion"
 import { Plus } from "lucide-react"
 
@@ -11,10 +11,21 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PageHeader } from "../components/page-header"
 import { useLanguage } from "../contexts/language-context"
+import {getTiers} from "@/lib/firebase";
 
 export default function LoyaltyPage() {
   const [pointsPerDollar, setPointsPerDollar] = useState("10")
+  const [dataTiers, setDataTiers] = useState([])
   const { t } = useLanguage()
+
+  useEffect(() => {
+    const getTiersData = async () => {
+        const dataTiers = await getTiers()
+        setDataTiers(dataTiers)
+    }
+
+    getTiersData()
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -51,40 +62,6 @@ export default function LoyaltyPage() {
                         className="max-w-[120px]"
                       />
                       <span className="text-sm text-muted-foreground">{t("loyalty.pointsPer")}</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="min-purchase">{t("loyalty.minPurchase")}</Label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">$</span>
-                      <Input id="min-purchase" type="number" defaultValue="0" className="max-w-[120px]" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <input type="checkbox" className="h-4 w-4 rounded border-gray-300" />
-                      <span>{t("loyalty.bonusFirstPurchase")}</span>
-                    </Label>
-                    <div className="pl-6">
-                      <div className="flex items-center gap-2">
-                        <Input type="number" defaultValue="100" className="max-w-[120px]" />
-                        <span className="text-sm text-muted-foreground">{t("loyalty.bonusPoints")}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <input type="checkbox" className="h-4 w-4 rounded border-gray-300" />
-                      <span>{t("loyalty.referralPoints")}</span>
-                    </Label>
-                    <div className="pl-6">
-                      <div className="flex items-center gap-2">
-                        <Input type="number" defaultValue="50" className="max-w-[120px]" />
-                        <span className="text-sm text-muted-foreground">{t("loyalty.pointsPerReferral")}</span>
-                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -144,30 +121,11 @@ export default function LoyaltyPage() {
                     <div className="space-y-2">
                       <Label htmlFor="bronze-threshold">Qualification Threshold</Label>
                       <div className="flex items-center gap-2">
-                        <Input id="bronze-threshold" type="number" defaultValue="0" className="max-w-[120px]" />
+                        <Input id="bronze-threshold" type="number"
+                               defaultValue={dataTiers[0]?.tiers[0].threshold !== null ? dataTiers[0]?.tiers[0].threshold.toString() : "Loading..."}
+                               className="max-w-[120px]" />
                         <span className="text-sm text-muted-foreground">points</span>
                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="bronze-multiplier">Points Multiplier</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          id="bronze-multiplier"
-                          type="number"
-                          defaultValue="1"
-                          step="0.1"
-                          className="max-w-[120px]"
-                        />
-                        <span className="text-sm text-muted-foreground">x standard rate</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2">
-                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300" />
-                        <span>Birthday bonus</span>
-                      </Label>
                     </div>
                   </CardContent>
                   <CardFooter>
@@ -195,30 +153,11 @@ export default function LoyaltyPage() {
                     <div className="space-y-2">
                       <Label htmlFor="silver-threshold">Qualification Threshold</Label>
                       <div className="flex items-center gap-2">
-                        <Input id="silver-threshold" type="number" defaultValue="500" className="max-w-[120px]" />
+                        <Input id="silver-threshold" type="number"
+                               defaultValue={dataTiers[0]?.tiers[1].threshold !== null ? dataTiers[0]?.tiers[1].threshold.toString() : "Loading..."}
+                               className="max-w-[120px]" />
                         <span className="text-sm text-muted-foreground">points</span>
                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="silver-multiplier">Points Multiplier</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          id="silver-multiplier"
-                          type="number"
-                          defaultValue="1.5"
-                          step="0.1"
-                          className="max-w-[120px]"
-                        />
-                        <span className="text-sm text-muted-foreground">x standard rate</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2">
-                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300" defaultChecked />
-                        <span>Birthday bonus</span>
-                      </Label>
                     </div>
                   </CardContent>
                   <CardFooter>
@@ -246,30 +185,11 @@ export default function LoyaltyPage() {
                     <div className="space-y-2">
                       <Label htmlFor="gold-threshold">Qualification Threshold</Label>
                       <div className="flex items-center gap-2">
-                        <Input id="gold-threshold" type="number" defaultValue="1000" className="max-w-[120px]" />
+                        <Input id="gold-threshold" type="number"
+                               defaultValue={dataTiers[0]?.tiers[2].threshold !== null ? dataTiers[0]?.tiers[2].threshold.toString() : "Loading..."}
+                               className="max-w-[120px]" />
                         <span className="text-sm text-muted-foreground">points</span>
                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="gold-multiplier">Points Multiplier</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          id="gold-multiplier"
-                          type="number"
-                          defaultValue="2"
-                          step="0.1"
-                          className="max-w-[120px]"
-                        />
-                        <span className="text-sm text-muted-foreground">x standard rate</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2">
-                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300" defaultChecked />
-                        <span>Birthday bonus</span>
-                      </Label>
                     </div>
                   </CardContent>
                   <CardFooter>

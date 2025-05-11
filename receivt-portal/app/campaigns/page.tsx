@@ -77,8 +77,7 @@ export default function CampaignsPage() {
   const filteredCampaigns = campaigns.filter(
     (campaign) =>
       campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      campaign.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      campaign.audience.toLowerCase().includes(searchTerm.toLowerCase()),
+      campaign.id.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
@@ -131,10 +130,7 @@ export default function CampaignsPage() {
                     <TableHead>{t("campaigns.name")}</TableHead>
                     <TableHead>{t("campaigns.status")}</TableHead>
                     <TableHead className="hidden md:table-cell">{t("campaigns.dateRange")}</TableHead>
-                    <TableHead className="hidden md:table-cell">{t("campaigns.audience")}</TableHead>
-                    <TableHead>{t("campaigns.opens")}</TableHead>
                     <TableHead>{t("campaigns.redemptions")}</TableHead>
-                    <TableHead>{t("campaigns.conversion")}</TableHead>
                     <TableHead className="text-right">{t("campaigns.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -159,10 +155,7 @@ export default function CampaignsPage() {
                       <TableCell className="hidden md:table-cell">
                         {campaign.startDate} to {campaign.endDate}
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">{campaign.audience}</TableCell>
-                      <TableCell>{campaign.opens}</TableCell>
                       <TableCell>{campaign.redemptions}</TableCell>
-                      <TableCell>{campaign.conversions}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm">
                           {t("campaigns.view")}
