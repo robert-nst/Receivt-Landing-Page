@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Calendar, Download, Filter, Plus, Search } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -10,69 +10,72 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PageHeader } from "../components/page-header"
 import { useLanguage } from "../contexts/language-context"
+import { collection, getDocs, Timestamp } from "firebase/firestore"
+import { db } from "@/lib/firebase"
+import { Dialog, DialogTitle } from "@radix-ui/react-dialog"
+import { DialogContent, DialogHeader } from "@/components/ui/dialog"
 
-// Mock data for campaigns
-const campaigns = [
-  {
-    id: "CAMP-001",
-    name: "Double Points Weekend",
-    status: "Active",
-    startDate: "2023-05-15",
-    endDate: "2023-05-17",
-    audience: "All Customers",
-    opens: 1250,
-    redemptions: 320,
-    conversions: "25.6%",
-  },
-  {
-    id: "CAMP-002",
-    name: "Welcome Bonus",
-    status: "Active",
-    startDate: "2023-01-01",
-    endDate: "2023-12-31",
-    audience: "New Customers",
-    opens: 890,
-    redemptions: 450,
-    conversions: "50.6%",
-  },
-  {
-    id: "CAMP-003",
-    name: "Summer Sale",
-    status: "Scheduled",
-    startDate: "2023-06-01",
-    endDate: "2023-06-30",
-    audience: "All Customers",
-    opens: 0,
-    redemptions: 0,
-    conversions: "0%",
-  },
-  {
-    id: "CAMP-004",
-    name: "Birthday Rewards",
-    status: "Active",
-    startDate: "2023-01-01",
-    endDate: "2023-12-31",
-    audience: "All Customers",
-    opens: 560,
-    redemptions: 210,
-    conversions: "37.5%",
-  },
-  {
-    id: "CAMP-005",
-    name: "Loyalty Tier Upgrade",
-    status: "Ended",
-    startDate: "2023-03-01",
-    endDate: "2023-04-30",
-    audience: "Silver Tier",
-    opens: 780,
-    redemptions: 150,
-    conversions: "19.2%",
-  },
-]
+interface Campaign {
+  id: string;
+  name: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  audience: string;
+  opens: number;
+  redemptions: number;
+  conversions: string;
+}
 
 export default function CampaignsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const { t } = useLanguage()
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const offersSnapshot = await getDocs(collection(db, "mock_offers"));
+        const offers = offersSnapshot.docs.map((doc) => doc.data());
+
+        const mappedCampaigns = offers.map((offer) => ({
+          id: offer.id_offer,
+          name: offer.name,
+          status: determineStatus(offer.start_date, offer.end_date),
+          startDate: convertTimestampToDate(offer.start_date),
+          endDate: convertTimestampToDate(offer.end_date),
+          audience: offer.tier || "All Customers",
+          opens: offer.usage_number || 0,
+          redemptions: offer.usage_number,
+          conversions: offer.percentage,
+        }));
+
+        setCampaigns(mappedCampaigns);
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+      }
+    };
+
+    fetchOffers();
+  }, []);
+
+  const determineStatus = (startDate: string, endDate: string): string => {
+    const now = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (now < start) return "Scheduled";
+    if (now > end) return "Ended";
+    return "Active";
+  };
+
+  const convertTimestampToDate = (timestamp: Timestamp | string): string => {
+    if (timestamp instanceof Timestamp) {
+      return timestamp.toDate().toLocaleDateString();
+    }
+    return timestamp; // If it's already a string, return it as is
+  };
 
   const filteredCampaigns = campaigns.filter(
     (campaign) =>
@@ -157,14 +160,63 @@ export default function CampaignsPage() {
                       </TableCell>
                       <TableCell>{campaign.redemptions}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" onClick={() => setSelectedCampaign(campaign)} size="sm">
                           {t("campaigns.view")}
                         </Button>
                       </TableCell>
                     </TableRow>
                   ))}
+                  <TableBody>
+                    {campaigns.map((campaign) => (
+                      <TableRow key={campaign.id}>
+                        <TableCell>{campaign.name}</TableCell>
+                        <TableCell>{campaign.status}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setSelectedCampaign(campaign)}
+                          >
+                            View
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
                 </TableBody>
               </Table>
+              <Dialog open={!!selectedCampaign} onOpenChange={() => setSelectedCampaign(null)}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Campaign Details</DialogTitle>
+                  </DialogHeader>
+                  {selectedCampaign && (
+                    <div className="space-y-4">
+                      <p>
+                        <strong>Name:</strong> {selectedCampaign.name}
+                      </p>
+                      <p>
+                        <strong>Status:</strong> {selectedCampaign.status}
+                      </p>
+                      <p>
+                        <strong>Start Date:</strong> {selectedCampaign.startDate}
+                      </p>
+                      <p>
+                        <strong>End Date:</strong> {selectedCampaign.endDate}
+                      </p>
+                      <p>
+                        <strong>Audience:</strong> {selectedCampaign.audience}
+                      </p>
+                      <p>
+                        <strong>Redemptions:</strong> {selectedCampaign.redemptions}
+                      </p>
+                      <p>
+                        <strong>Conversions:</strong> {selectedCampaign.conversions}
+                      </p>
+                    </div>
+                  )}
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex items-center justify-between px-4 py-2 border-t">
               <div className="text-sm text-muted-foreground">
