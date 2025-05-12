@@ -90,7 +90,7 @@ export default function AnalyticsPage() {
                       return (
                         <div
                           key={index}
-                          className="relative flex-1 rounded-md bg-secondary/10 transition-all hover:bg-secondary/20"
+                          className="relative flex-1 rounded-md bg-[#940605]/10 transition-all hover:bg-[#940605]/20"
                           style={{ height: `${height}%` }}
                         >
                           <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs">{index + 1}</div>
@@ -139,15 +139,15 @@ export default function AnalyticsPage() {
                 </div>
                 <div className="flex justify-center gap-4 mt-4">
                   <div className="flex items-center gap-1">
-                    <div className="h-3 w-3 rounded-full bg-secondary" />
+                    <div className="h-3 w-3 rounded-full bg-[#940605]" />
                     <span className="text-sm">Bronze (65%)</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="h-3 w-3 rounded-full bg-secondary/60" />
+                    <div className="h-3 w-3 rounded-full bg-[#940605]/60" />
                     <span className="text-sm">Silver (25%)</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="h-3 w-3 rounded-full bg-secondary/30" />
+                    <div className="h-3 w-3 rounded-full bg-[#940605]/30" />
                     <span className="text-sm">Gold (10%)</span>
                   </div>
                 </div>
@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
                       return (
                         <div
                           key={index}
-                          className="relative flex-1 rounded-md bg-secondary/10 transition-all hover:bg-secondary/20"
+                          className="relative flex-1 rounded-md bg-[#940605]/10 transition-all hover:bg-[#940605]/20"
                           style={{ height: `${height}%` }}
                         >
                           <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">{height}%</div>
@@ -217,7 +217,7 @@ export default function AnalyticsPage() {
                       return (
                         <div
                           key={index}
-                          className="relative flex-1 rounded-md bg-secondary/10 transition-all hover:bg-secondary/20"
+                          className="relative flex-1 rounded-md bg-[#940605]/10 transition-all hover:bg-[#940605]/20"
                           style={{ height: `${height}%` }}
                         >
                           <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -267,7 +267,7 @@ export default function AnalyticsPage() {
                       return (
                         <div
                           key={index}
-                          className="relative flex-1 rounded-md bg-secondary/10 transition-all hover:bg-secondary/20"
+                          className="relative flex-1 rounded-md bg-[#940605]/10 transition-all hover:bg-[#940605]/20"
                           style={{ height: `${height}%` }}
                         >
                           {(index % 3 === 0 || index === 23) && (

@@ -79,10 +79,10 @@ export function Sidebar() {
         </SheetTrigger>
         <SheetContent side="left" className="p-0">
           <div className="flex flex-col h-full">
-            <div className="p-4 border-b">
-              <Link href="/" className="flex items-center gap-2">
-                <img src="/images/logo.png" alt="Receivt Logo" className="h-8" />
-              </Link>
+            <div className="p-2 border-b">
+              <div className="flex justify-center items-center min-h-[300px]">
+                <img src="/images/logo.png" alt="Receivt Logo" className="h-48 w-auto max-w-full" />
+              </div>
             </div>
             <nav className="flex-1 overflow-auto py-4">
               <ul className="grid gap-1 px-2">
@@ -92,7 +92,7 @@ export function Sidebar() {
                       href={item.href}
                       className={cn(
                         "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                        pathname === item.href ? "bg-secondary text-white" : "hover:bg-secondary/10",
+                        pathname === item.href ? "bg-[#940605] text-white" : "hover:bg-[#940605]/10",
                       )}
                     >
                       <item.icon className="h-5 w-5" />
@@ -117,7 +117,7 @@ export function Sidebar() {
         <div className="flex flex-col h-full">
           <div className="p-4 border-b flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              {!isCollapsed && <img src="/images/logo.png" alt="Receivt Logo" className="h-8" />}
+              {!isCollapsed && <img src="/images/logo.png" alt="Receivt Logo" className="h-16 w-auto max-w-full" />}
               {isCollapsed && <ShoppingBag className="h-6 w-6 text-secondary" />}
             </Link>
             <Button variant="ghost" size="icon" onClick={() => setIsCollapsed(!isCollapsed)} className="h-8 w-8">
@@ -132,7 +132,7 @@ export function Sidebar() {
                     href={item.href}
                     className={cn(
                       "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                      pathname === item.href ? "bg-secondary text-white" : "hover:bg-secondary/10",
+                      pathname === item.href ? "bg-[#940605] text-white" : "hover:bg-[#940605]/10",
                     )}
                   >
                     <item.icon className="h-5 w-5 flex-shrink-0" />

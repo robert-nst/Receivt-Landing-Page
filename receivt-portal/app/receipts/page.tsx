@@ -219,7 +219,7 @@ Total: ${receipt.total} RON
       <PageHeader
         title={t("receipts")}
         description={t("receipts.description")}
-        actions={<Button className="bg-secondary hover:bg-secondary/90" onClick={handleExport}>{t("receipts.exportAll")}</Button>}
+        actions={<Button className="bg-[#940605] hover:bg-[#940605]/90" onClick={handleExport}>{t("receipts.exportAll")}</Button>}
       />
 
       <div className="p-6 pt-0">

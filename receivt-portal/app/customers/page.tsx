@@ -223,7 +223,7 @@ export default function CustomersPage() {
         title={t("customers")}
         description={t("customers.description")}
         actions={
-          <Button className="bg-secondary hover:bg-secondary/90 gap-1">
+          <Button className="bg-[#940605] hover:bg-[#940605]/90 gap-1">
             <UserPlus className="h-4 w-4" />
             {t("customers.addCustomer")}
           </Button>
@@ -420,7 +420,7 @@ function UserDetailsModal({ user }: { user: User }) {
     <DialogContent className="max-h-[80vh] overflow-y-auto bg-white">
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold mb-2 text-secondary flex items-center gap-2">
-          <span className="inline-block w-2 h-6 rounded bg-secondary mr-2"></span>
+          <span className="inline-block w-2 h-6 rounded bg-[#940605] mr-2"></span>
           Customer Profile: {user.first_name} {user.last_name}
         </DialogTitle>
         <DialogDescription className="mb-4 text-base text-muted-foreground">
@@ -434,7 +434,7 @@ function UserDetailsModal({ user }: { user: User }) {
           <div><span className="font-semibold text-secondary">Age:</span> <span className="text-gray-700">{safeRender(calculateAge(user.birthday))} years</span></div>
         </div>
         <div className="border-t pt-6">
-          <h4 className="font-semibold text-lg mb-2 flex items-center gap-2"><span className="w-2 h-6 rounded bg-secondary"></span><span className="text-secondary">Active Loyalty Offers</span></h4>
+          <h4 className="font-semibold text-lg mb-2 flex items-center gap-2"><span className="w-2 h-6 rounded bg-[#940605]"></span><span className="text-secondary">Active Loyalty Offers</span></h4>
           {loading ? (
             <div>Loading offers and receipts...</div>
           ) : offers.length === 0 ? (
@@ -464,7 +464,7 @@ function UserDetailsModal({ user }: { user: User }) {
           )}
         </div>
         <div className="border-t pt-6">
-          <h4 className="font-semibold text-lg mb-2 flex items-center gap-2"><span className="w-2 h-6 rounded bg-secondary"></span><span className="text-secondary">Receipts</span></h4>
+          <h4 className="font-semibold text-lg mb-2 flex items-center gap-2"><span className="w-2 h-6 rounded bg-[#940605]"></span><span className="text-secondary">Receipts</span></h4>
           {loading ? (
             <div>Loading offers and receipts...</div>
           ) : receipts.length === 0 ? (
@@ -485,7 +485,7 @@ function UserDetailsModal({ user }: { user: User }) {
                       const prod = productsMap[pid];
                       return prod ? (
                         <li key={pid} className="mb-1">
-                          <div className="flex items-center justify-between gap-2 bg-secondary/10 rounded p-2 shadow-sm">
+                          <div className="flex items-center justify-between gap-2 bg-[#940605]/10 rounded p-2 shadow-sm">
                             <div className="flex items-center gap-2">
                               {prod.picture && <img src={prod.picture} alt={prod.name} className="w-8 h-8 object-cover rounded border border-secondary" />}
                               <span className="font-semibold text-secondary">{safeRender(prod.name)}</span>

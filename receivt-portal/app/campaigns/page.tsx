@@ -86,7 +86,7 @@ export default function CampaignsPage() {
         title={t("campaigns")}
         description={t("campaigns.description")}
         actions={
-          <Button className="bg-secondary hover:bg-secondary/90 gap-1">
+          <Button className="bg-[#940605] hover:bg-[#940605]/90 gap-1">
             <Plus className="h-4 w-4" />
             {t("campaigns.newCampaign")}
           </Button>
@@ -201,7 +201,7 @@ export default function CampaignsPage() {
                     {campaigns.slice(0, 5).map((campaign, index) => (
                       <div
                         key={index}
-                        className="relative flex-1 rounded-md bg-secondary/10 transition-all hover:bg-secondary/20"
+                        className="relative flex-1 rounded-md bg-[#940605]/10 transition-all hover:bg-[#940605]/20"
                         style={{
                           height: `${Number.parseInt(campaign.conversions) * 2}%`,
                           minHeight: "20px",
@@ -236,7 +236,7 @@ export default function CampaignsPage() {
               <CardContent>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2">
-                    <div className="rounded-full bg-secondary/10 p-1 mt-0.5">
+                    <div className="rounded-full bg-[#940605]/10 p-1 mt-0.5">
                       <Plus className="h-3 w-3 text-secondary" />
                     </div>
                     <div>
@@ -247,7 +247,7 @@ export default function CampaignsPage() {
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <div className="rounded-full bg-secondary/10 p-1 mt-0.5">
+                    <div className="rounded-full bg-[#940605]/10 p-1 mt-0.5">
                       <Plus className="h-3 w-3 text-secondary" />
                     </div>
                     <div>
@@ -258,7 +258,7 @@ export default function CampaignsPage() {
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <div className="rounded-full bg-secondary/10 p-1 mt-0.5">
+                    <div className="rounded-full bg-[#940605]/10 p-1 mt-0.5">
                       <Plus className="h-3 w-3 text-secondary" />
                     </div>
                     <div>
@@ -271,7 +271,7 @@ export default function CampaignsPage() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-secondary hover:bg-secondary/90">Create New Campaign</Button>
+                <Button className="w-full bg-[#940605] hover:bg-[#940605]/90">Create New Campaign</Button>
               </CardFooter>
             </Card>
           </motion.div>

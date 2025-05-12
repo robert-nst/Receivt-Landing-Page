@@ -155,7 +155,7 @@ export default function Dashboard() {
               <span>{t("dashboard.filter")}</span>
             </Button>
 
-            <Button size="sm" className="h-8 gap-1 bg-secondary hover:bg-secondary/90">
+            <Button size="sm" className="h-8 gap-1 bg-[#940605] hover:bg-[#940605]/90">
               <Download className="h-3.5 w-3.5" />
               <span>{t("dashboard.export")}</span>
             </Button>
@@ -247,7 +247,7 @@ export default function Dashboard() {
                         {revenueData.slice(-7).map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            className="relative flex-1 rounded-md bg-[#940605] transition-all hover:bg-[#940605]/10"
                             style={{ height: `${(item.value / 10000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -263,7 +263,7 @@ export default function Dashboard() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="bg-secondary text-white flex items-center"
+                      className="bg-[#940605] text-white flex items-center"
                       onClick={() => handleSeeMore('daily-revenue')}
                     >
                       {t("See more")}
@@ -294,7 +294,7 @@ export default function Dashboard() {
                         {revenueData.slice(-7).map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            className="relative flex-1 rounded-md bg-[#940605] transition-all hover:bg-[#940605]/10"
                             style={{ height: `${(item.value / 10000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -310,7 +310,7 @@ export default function Dashboard() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="bg-secondary text-white flex items-center"
+                      className="bg-[#940605] text-white flex items-center"
                       onClick={() => handleSeeMore('daily-engagement')}
                     >
                       {t("See more")}
@@ -344,7 +344,7 @@ export default function Dashboard() {
                         {weeklyRevenueData.map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            className="relative flex-1 rounded-md bg-[#940605] transition-all hover:bg-[#940605]/10"
                             style={{ height: `${(item.value / 32000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -360,7 +360,7 @@ export default function Dashboard() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="bg-secondary text-white flex items-center"
+                      className="bg-[#940605] text-white flex items-center"
                       onClick={() => handleSeeMore('weekly-revenue')}
                     >
                       {t("See more")}
@@ -391,7 +391,7 @@ export default function Dashboard() {
                         {weeklyEngagementData.map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            className="relative flex-1 rounded-md bg-[#940605] transition-all hover:bg-[#940605]/10"
                             style={{ height: `${(item.active / 5000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -407,7 +407,7 @@ export default function Dashboard() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="bg-secondary text-white flex items-center"
+                      className="bg-[#940605] text-white flex items-center"
                       onClick={() => handleSeeMore('weekly-engagement')}
                     >
                       {t("See more")}
@@ -442,7 +442,7 @@ export default function Dashboard() {
                         {monthlyRevenueData.map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            className="relative flex-1 rounded-md bg-[#940605] transition-all hover:bg-[#940605]/10"
                             style={{ height: `${(item.value / 180000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -458,7 +458,7 @@ export default function Dashboard() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="bg-secondary text-white flex items-center"
+                      className="bg-[#940605] text-white flex items-center"
                       onClick={() => handleSeeMore('monthly-revenue')}
                     >
                       {t("See more")}
@@ -489,7 +489,7 @@ export default function Dashboard() {
                         {monthlyEngagementData.map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            className="relative flex-1 rounded-md bg-[#940605] transition-all hover:bg-[#940605]/10"
                             style={{ height: `${(item.active / 24000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -505,7 +505,7 @@ export default function Dashboard() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="bg-secondary text-white flex items-center"
+                      className="bg-[#940605] text-white flex items-center"
                       onClick={() => handleSeeMore('monthly-engagement')}
                     >
                       {t("See more")}

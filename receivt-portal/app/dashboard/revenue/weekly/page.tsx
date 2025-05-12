@@ -47,7 +47,7 @@ export default function WeeklyRevenuePage() {
                 {detailedWeeklyRevenueData.map((item, index) => (
                   <div
                     key={index}
-                    className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                    className="relative flex-1 rounded-md bg-[#940605] transition-all hover:bg-[#940605]/10"
                     style={{ height: `${(item.value / 42000) * 100}%` }}
                   >
                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">

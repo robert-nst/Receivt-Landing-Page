@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,95 @@ import { useLanguage } from "../contexts/language-context"
 export default function SettingsPage() {
   const [apiKey, setApiKey] = useState("sk_test_51Hb9***************************")
   const { t } = useLanguage()
+  const [logoUrl, setLogoUrl] = useState<string>("/images/logo.png")
+  const [brandColor, setBrandColor] = useState<string>("#083118")
+  const [pendingBrandColor, setPendingBrandColor] = useState<string>("#083118")
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const colorInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    // Load color from localStorage
+    const savedColor = localStorage.getItem("brandColor")
+    if (savedColor) {
+      setBrandColor(savedColor)
+      setPendingBrandColor(savedColor)
+      const hsl = hexToHsl(savedColor)
+      document.documentElement.style.setProperty("--secondary", hsl)
+      document.documentElement.classList.add('tw-repaint')
+      setTimeout(() => document.documentElement.classList.remove('tw-repaint'), 10)
+    }
+    // Load logo from localStorage
+    const savedLogo = localStorage.getItem("logoUrl")
+    if (savedLogo) setLogoUrl(savedLogo)
+  }, [])
+
+  function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        if (ev.target?.result) {
+          setLogoUrl(ev.target.result as string)
+          localStorage.setItem("logoUrl", ev.target.result as string)
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  function handleColorChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const color = e.target.value
+    setPendingBrandColor(color)
+  }
+
+  function handleSaveChanges() {
+    setBrandColor(pendingBrandColor)
+    localStorage.setItem("brandColor", pendingBrandColor)
+    const hsl = hexToHsl(pendingBrandColor)
+    console.log('Saving color:', pendingBrandColor, 'HSL:', hsl)
+    if (hsl && typeof hsl === 'string' && hsl.includes('%')) {
+      document.documentElement.style.setProperty("--secondary", hsl)
+    } else {
+      document.documentElement.style.setProperty("--secondary", '142 74% 11%')
+      console.warn('Fallback to default green HSL')
+    }
+    // Force repaint for Tailwind JIT
+    document.documentElement.classList.add('tw-repaint')
+    setTimeout(() => document.documentElement.classList.remove('tw-repaint'), 10)
+  }
+
+  // Helper: convert hex to HSL string for Tailwind CSS variable
+  function hexToHsl(hex: string) {
+    let r = 0, g = 0, b = 0
+    if (hex.length === 4) {
+      r = parseInt(hex[1] + hex[1], 16)
+      g = parseInt(hex[2] + hex[2], 16)
+      b = parseInt(hex[3] + hex[3], 16)
+    } else if (hex.length === 7) {
+      r = parseInt(hex[1] + hex[2], 16)
+      g = parseInt(hex[3] + hex[4], 16)
+      b = parseInt(hex[5] + hex[6], 16)
+    }
+    r /= 255; g /= 255; b /= 255
+    const max = Math.max(r, g, b), min = Math.min(r, g, b)
+    let h = 0, s = 0, l = (max + min) / 2
+    if (max !== min) {
+      const d = max - min
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break
+        case g: h = (b - r) / d + 2; break
+        case b: h = (r - g) / d + 4; break
+      }
+      h /= 6
+    }
+    h = Math.round(h * 360)
+    s = Math.round(s * 100)
+    l = Math.round(l * 100)
+    const hsl = `${h} ${s}% ${l}%`
+    console.log('hexToHsl', hex, '->', hsl)
+    return hsl
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -71,7 +160,7 @@ export default function SettingsPage() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline">{t("settings.cancel")}</Button>
-                  <Button className="bg-secondary hover:bg-secondary/90">{t("settings.saveChanges")}</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">{t("settings.saveChanges")}</Button>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -91,35 +180,45 @@ export default function SettingsPage() {
                     <Label htmlFor="program-name">Loyalty Program Name</Label>
                     <Input id="program-name" defaultValue="Acme Rewards" />
                   </div>
-
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label>Logo</Label>
-                      <div className="flex items-center gap-4">
-                        <img src="/images/logo.png" alt="Logo" className="h-12 w-auto" />
-                        <Button variant="outline" size="sm">
-                          Change Logo
-                        </Button>
-                      </div>
+                  <div className="space-y-2">
+                    <Label>Logo</Label>
+                    <div className="flex items-center gap-4">
+                      <img src={logoUrl} alt="Logo" className="h-12 w-auto" />
+                      <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                        Change Logo
+                      </Button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleLogoChange}
+                      />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label>Brand Colors</Label>
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1.5">
-                          <div className="h-6 w-6 rounded-full bg-secondary" />
-                          <span className="text-sm">#083118</span>
-                        </div>
-                        <Button variant="outline" size="sm">
-                          Change
-                        </Button>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Brand Colors</Label>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-6 w-6 rounded-full" style={{ background: pendingBrandColor }} />
+                        <span className="text-sm">{pendingBrandColor}</span>
                       </div>
+                      <Button variant="outline" size="sm" onClick={() => colorInputRef.current?.click()}>
+                        Change
+                      </Button>
+                      <input
+                        ref={colorInputRef}
+                        type="color"
+                        className="hidden"
+                        value={pendingBrandColor}
+                        onChange={handleColorChange}
+                      />
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline">Cancel</Button>
-                  <Button className="bg-secondary hover:bg-secondary/90">Save Changes</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90" onClick={handleSaveChanges}>{t("settings.saveChanges")}</Button>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -158,7 +257,7 @@ export default function SettingsPage() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline">Cancel</Button>
-                  <Button className="bg-secondary hover:bg-secondary/90">Save Changes</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">Save Changes</Button>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -238,7 +337,7 @@ export default function SettingsPage() {
                           <p className="text-sm text-muted-foreground">Add integration with other platforms</p>
                         </div>
                       </div>
-                      <Button className="bg-secondary hover:bg-secondary/90" size="sm">
+                      <Button className="bg-[#940605] hover:bg-[#940605]/90" size="sm">
                         Connect
                       </Button>
                     </div>
@@ -256,14 +355,14 @@ export default function SettingsPage() {
                     <CardTitle>Team Members</CardTitle>
                     <CardDescription>Manage your team members and their access</CardDescription>
                   </div>
-                  <Button className="bg-secondary hover:bg-secondary/90">Invite User</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">Invite User</Button>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#940605]/10 text-secondary">
                             JD
                           </div>
                           <div>
@@ -285,7 +384,7 @@ export default function SettingsPage() {
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#940605]/10 text-secondary">
                             JS
                           </div>
                           <div>
@@ -307,7 +406,7 @@ export default function SettingsPage() {
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#940605]/10 text-secondary">
                             RW
                           </div>
                           <div>
@@ -411,7 +510,7 @@ export default function SettingsPage() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end">
-                  <Button className="bg-secondary hover:bg-secondary/90">Save Changes</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">Save Changes</Button>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -475,7 +574,7 @@ export default function SettingsPage() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline">Reset to Default</Button>
-                  <Button className="bg-secondary hover:bg-secondary/90">Save Preferences</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">Save Preferences</Button>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -503,7 +602,7 @@ export default function SettingsPage() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end">
-                  <Button className="bg-secondary hover:bg-secondary/90">Save Recipients</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">Save Recipients</Button>
                 </CardFooter>
               </Card>
             </motion.div>

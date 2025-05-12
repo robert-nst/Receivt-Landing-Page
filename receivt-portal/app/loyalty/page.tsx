@@ -32,7 +32,7 @@ export default function LoyaltyPage() {
       <PageHeader
         title={t("loyalty")}
         description={t("loyalty.description")}
-        actions={<Button className="bg-secondary hover:bg-secondary/90">{t("loyalty.saveChanges")}</Button>}
+        actions={<Button className="bg-[#940605] hover:bg-[#940605]/90">{t("loyalty.saveChanges")}</Button>}
       />
 
       <div className="p-6 pt-0">
@@ -67,7 +67,7 @@ export default function LoyaltyPage() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline">{t("loyalty.resetToDefault")}</Button>
-                  <Button className="bg-secondary hover:bg-secondary/90">{t("loyalty.saveRules")}</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">{t("loyalty.saveRules")}</Button>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -100,7 +100,7 @@ export default function LoyaltyPage() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline">Reset to Default</Button>
-                  <Button className="bg-secondary hover:bg-secondary/90">Save Expiration Rules</Button>
+                  <Button className="bg-[#940605] hover:bg-[#940605]/90">Save Expiration Rules</Button>
                 </CardFooter>
               </Card>
             </motion.div>
@@ -202,7 +202,7 @@ export default function LoyaltyPage() {
             </div>
 
             <div className="flex justify-end">
-              <Button className="bg-secondary hover:bg-secondary/90">Add New Tier</Button>
+              <Button className="bg-[#940605] hover:bg-[#940605]/90">Add New Tier</Button>
             </div>
           </TabsContent>
 
@@ -240,7 +240,7 @@ export default function LoyaltyPage() {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Button variant="outline">Delete</Button>
-                    <Button className="bg-secondary hover:bg-secondary/90">Save</Button>
+                    <Button className="bg-[#940605] hover:bg-[#940605]/90">Save</Button>
                   </CardFooter>
                 </Card>
               </motion.div>
@@ -281,7 +281,7 @@ export default function LoyaltyPage() {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Button variant="outline">Delete</Button>
-                    <Button className="bg-secondary hover:bg-secondary/90">Save</Button>
+                    <Button className="bg-[#940605] hover:bg-[#940605]/90">Save</Button>
                   </CardFooter>
                 </Card>
               </motion.div>
@@ -322,7 +322,7 @@ export default function LoyaltyPage() {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Button variant="outline">Delete</Button>
-                    <Button className="bg-secondary hover:bg-secondary/90">Save</Button>
+                    <Button className="bg-[#940605] hover:bg-[#940605]/90">Save</Button>
                   </CardFooter>
                 </Card>
               </motion.div>
@@ -334,12 +334,12 @@ export default function LoyaltyPage() {
               >
                 <Card className="border-dashed border-2 flex flex-col items-center justify-center p-6 h-full">
                   <div className="flex flex-col items-center gap-2 text-center">
-                    <div className="rounded-full bg-secondary/10 p-3">
+                    <div className="rounded-full bg-[#940605]/10 p-3">
                       <Plus className="h-6 w-6 text-secondary" />
                     </div>
                     <h3 className="text-lg font-medium">Add New Reward</h3>
                     <p className="text-sm text-muted-foreground">Create a new redemption option for your customers</p>
-                    <Button className="mt-2 bg-secondary hover:bg-secondary/90">Add Reward</Button>
+                    <Button className="mt-2 bg-[#940605] hover:bg-[#940605]/90">Add Reward</Button>
                   </div>
                 </Card>
               </motion.div>
