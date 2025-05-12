@@ -160,7 +160,7 @@ export default function CampaignsPage() {
                       </TableCell>
                       <TableCell>{campaign.redemptions}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" onClick={() => setSelectedCampaign(campaign)} size="sm">
+                        <Button variant="ghost" size="sm">
                           {t("campaigns.view")}
                         </Button>
                       </TableCell>
@@ -185,38 +185,6 @@ export default function CampaignsPage() {
                   </TableBody>
                 </TableBody>
               </Table>
-              <Dialog open={!!selectedCampaign} onOpenChange={() => setSelectedCampaign(null)}>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Campaign Details</DialogTitle>
-                  </DialogHeader>
-                  {selectedCampaign && (
-                    <div className="space-y-4">
-                      <p>
-                        <strong>Name:</strong> {selectedCampaign.name}
-                      </p>
-                      <p>
-                        <strong>Status:</strong> {selectedCampaign.status}
-                      </p>
-                      <p>
-                        <strong>Start Date:</strong> {selectedCampaign.startDate}
-                      </p>
-                      <p>
-                        <strong>End Date:</strong> {selectedCampaign.endDate}
-                      </p>
-                      <p>
-                        <strong>Audience:</strong> {selectedCampaign.audience}
-                      </p>
-                      <p>
-                        <strong>Redemptions:</strong> {selectedCampaign.redemptions}
-                      </p>
-                      <p>
-                        <strong>Conversions:</strong> {selectedCampaign.conversions}
-                      </p>
-                    </div>
-                  )}
-                </DialogContent>
-              </Dialog>
             </div>
             <div className="flex items-center justify-between px-4 py-2 border-t">
               <div className="text-sm text-muted-foreground">
