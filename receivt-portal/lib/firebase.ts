@@ -15,6 +15,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig)
 const db = getFirestore(app)
+export { db }
 
 /**
  * Adds an encrypted email to the Firebase Firestore database

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { ArrowBigRight, ArrowRightIcon, ArrowUpRight, Calendar, CreditCard, DollarSign, Download, LineChart, RefreshCcw, Users } from "lucide-react"
 import { motion } from "framer-motion"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -28,6 +29,22 @@ const revenueData = [
   { name: "Dec", value: 10000 },
 ]
 
+const weeklyRevenueData = [
+  { name: "Week 1", value: 25000 },
+  { name: "Week 2", value: 28000 },
+  { name: "Week 3", value: 32000 },
+  { name: "Week 4", value: 30000 },
+]
+
+const monthlyRevenueData = [
+  { name: "Jan", value: 120000 },
+  { name: "Feb", value: 140000 },
+  { name: "Mar", value: 160000 },
+  { name: "Apr", value: 150000 },
+  { name: "May", value: 180000 },
+  { name: "Jun", value: 170000 },
+]
+
 const engagementData = [
   { name: "Mon", active: 400, total: 600 },
   { name: "Tue", active: 300, total: 500 },
@@ -38,11 +55,28 @@ const engagementData = [
   { name: "Sun", active: 700, total: 900 },
 ]
 
+const weeklyEngagementData = [
+  { name: "Week 1", active: 2800, total: 4000 },
+  { name: "Week 2", active: 3200, total: 4500 },
+  { name: "Week 3", active: 3500, total: 5000 },
+  { name: "Week 4", active: 3300, total: 4800 },
+]
+
+const monthlyEngagementData = [
+  { name: "Jan", active: 12000, total: 18000 },
+  { name: "Feb", active: 14000, total: 20000 },
+  { name: "Mar", active: 16000, total: 22000 },
+  { name: "Apr", active: 15000, total: 21000 },
+  { name: "May", active: 18000, total: 24000 },
+  { name: "Jun", active: 17000, total: 23000 },
+]
+
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false)
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
   const [totalLoyaltyPoints, setTotalLoyaltyPoints] = useState<number | null>(null);
   const { t } = useLanguage()
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true);
@@ -60,6 +94,52 @@ export default function Dashboard() {
     fetchTotalUsers();
     fetchTotalLoyaltyPoints();
   }, []);
+
+  const handleDownloadReport = () => {
+    // Create CSV content
+    const headers = "Period,Revenue,Active Users,Total Users\n";
+    const content = revenueData.map((item, index) => {
+      const engagement = engagementData[index];
+      return `${item.name},${item.value},${engagement?.active || 0},${engagement?.total || 0}`;
+    }).join("\n");
+    
+    const csvContent = headers + content;
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'dashboard-report.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleSeeMore = (type: string) => {
+    // Navigate to the detailed view based on the type
+    switch(type) {
+      case 'daily-revenue':
+        router.push('/dashboard/revenue/daily');
+        break;
+      case 'daily-engagement':
+        router.push('/dashboard/engagement/daily');
+        break;
+      case 'weekly-revenue':
+        router.push('/dashboard/revenue/weekly');
+        break;
+      case 'weekly-engagement':
+        router.push('/dashboard/engagement/weekly');
+        break;
+      case 'monthly-revenue':
+        router.push('/dashboard/revenue/monthly');
+        break;
+      case 'monthly-engagement':
+        router.push('/dashboard/engagement/monthly');
+        break;
+      default:
+        console.log('Unknown view type:', type);
+    }
+  };
 
   if (!mounted) return null
 
@@ -133,7 +213,12 @@ export default function Dashboard() {
               <TabsTrigger value="weekly">{t("dashboard.weekly")}</TabsTrigger>
               <TabsTrigger value="monthly">{t("dashboard.monthly")}</TabsTrigger>
             </TabsList>
-            <Button variant="outline" size="sm" className="h-8">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-8"
+              onClick={handleDownloadReport}
+            >
               <Download className="mr-2 h-3.5 w-3.5" />
               {t("dashboard.downloadReport")}
             </Button>
@@ -162,7 +247,7 @@ export default function Dashboard() {
                         {revenueData.slice(-7).map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary/10 transition-all hover:bg-secondary/20"
+                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
                             style={{ height: `${(item.value / 10000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -175,9 +260,14 @@ export default function Dashboard() {
                     </div>
                   </CardContent>
                   <div className="p-4 flex justify-center">
-                    <Button variant="outline" size="sm" className="bg-secondary text-white flex items-center">
-                      {t("dashboard.seeMore")}
-                      <ArrowRightIcon></ArrowRightIcon>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-secondary text-white flex items-center"
+                      onClick={() => handleSeeMore('daily-revenue')}
+                    >
+                      {t("See more")}
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </Card>
@@ -204,7 +294,7 @@ export default function Dashboard() {
                         {revenueData.slice(-7).map((item, index) => (
                           <div
                             key={index}
-                            className="relative flex-1 rounded-md bg-secondary/10 transition-all hover:bg-secondary/20"
+                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
                             style={{ height: `${(item.value / 10000) * 100}%` }}
                           >
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
@@ -217,9 +307,14 @@ export default function Dashboard() {
                     </div>
                   </CardContent>
                   <div className="p-4 flex justify-center">
-                    <Button variant="outline" size="sm" className="bg-secondary text-white flex items-center">
-                      {t("dashboard.seeMore")}
-                      <ArrowRightIcon></ArrowRightIcon>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-secondary text-white flex items-center"
+                      onClick={() => handleSeeMore('daily-engagement')}
+                    >
+                      {t("See more")}
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </Card>
@@ -228,62 +323,197 @@ export default function Dashboard() {
           </TabsContent>
           <TabsContent value="weekly" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Weekly Revenue</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px] w-full">
-                    <div className="flex h-full items-center justify-center text-muted-foreground">
-                      {t("dashboard.weeklyChart")}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+              >
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div className="space-y-0">
+                      <CardTitle>{t("dashboard.revenue")}</CardTitle>
+                      <CardDescription>{t("dashboard.revenueOverview")}</CardDescription>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Weekly Engagement</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px] w-full">
-                    <div className="flex h-full items-center justify-center text-muted-foreground">
-                      {t("dashboard.weeklyEngagement")}
+                    <div className="flex items-center gap-2">
+                      <LineChart className="h-4 w-4 text-secondary" />
                     </div>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <div className="h-[300px] w-full">
+                      <div className="flex h-full items-end gap-2">
+                        {weeklyRevenueData.map((item, index) => (
+                          <div
+                            key={index}
+                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            style={{ height: `${(item.value / 32000) * 100}%` }}
+                          >
+                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
+                              ${item.value}
+                            </div>
+                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs">{item.name}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                  <div className="p-4 flex justify-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-secondary text-white flex items-center"
+                      onClick={() => handleSeeMore('weekly-revenue')}
+                    >
+                      {t("See more")}
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
 
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+              >
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div className="space-y-0">
+                      <CardTitle>{t("dashboard.engagementRate")}</CardTitle>
+                      <CardDescription>{t("dashboard.activeVsTotal")}</CardDescription>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-secondary" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <div className="h-[300px] w-full">
+                      <div className="flex h-full items-end gap-2">
+                        {weeklyEngagementData.map((item, index) => (
+                          <div
+                            key={index}
+                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            style={{ height: `${(item.active / 5000) * 100}%` }}
+                          >
+                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
+                              {Math.round((item.active / item.total) * 100)}%
+                            </div>
+                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs">{item.name}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                  <div className="p-4 flex justify-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-secondary text-white flex items-center"
+                      onClick={() => handleSeeMore('weekly-engagement')}
+                    >
+                      {t("See more")}
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </Card>
+              </motion.div>
             </div>
           </TabsContent>
 
           <TabsContent value="monthly" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Monthly Revenue</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px] w-full">
-                    <div className="flex h-full items-center justify-center text-muted-foreground">
-                      {t("dashboard.monthlyChart")}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+              >
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div className="space-y-0">
+                      <CardTitle>{t("dashboard.revenue")}</CardTitle>
+                      <CardDescription>{t("dashboard.revenueOverview")}</CardDescription>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Monthly Engagement</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px] w-full">
-                    <div className="flex h-full items-center justify-center text-muted-foreground">
-                      {t("dashboard.monthlyEngagement")}
+                    <div className="flex items-center gap-2">
+                      <LineChart className="h-4 w-4 text-secondary" />
                     </div>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <div className="h-[300px] w-full">
+                      <div className="flex h-full items-end gap-2">
+                        {monthlyRevenueData.map((item, index) => (
+                          <div
+                            key={index}
+                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            style={{ height: `${(item.value / 180000) * 100}%` }}
+                          >
+                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
+                              ${item.value}
+                            </div>
+                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs">{item.name}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                  <div className="p-4 flex justify-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-secondary text-white flex items-center"
+                      onClick={() => handleSeeMore('monthly-revenue')}
+                    >
+                      {t("See more")}
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+              >
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div className="space-y-0">
+                      <CardTitle>{t("dashboard.engagementRate")}</CardTitle>
+                      <CardDescription>{t("dashboard.activeVsTotal")}</CardDescription>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-secondary" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <div className="h-[300px] w-full">
+                      <div className="flex h-full items-end gap-2">
+                        {monthlyEngagementData.map((item, index) => (
+                          <div
+                            key={index}
+                            className="relative flex-1 rounded-md bg-secondary transition-all hover:bg-secondary/10"
+                            style={{ height: `${(item.active / 24000) * 100}%` }}
+                          >
+                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
+                              {Math.round((item.active / item.total) * 100)}%
+                            </div>
+                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs">{item.name}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                  <div className="p-4 flex justify-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-secondary text-white flex items-center"
+                      onClick={() => handleSeeMore('monthly-engagement')}
+                    >
+                      {t("See more")}
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </Card>
+              </motion.div>
             </div>
           </TabsContent>
         </Tabs>
