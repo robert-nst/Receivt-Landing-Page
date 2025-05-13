@@ -19,7 +19,8 @@ import {
   Linkedin,
   Mail,
   MapPin,
-  Phone
+  Phone,
+  Globe
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -1086,6 +1087,12 @@ export default function FinalStep({
                     <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
                       <Instagram className="h-5 w-5"/>
                       Instagram
+                    </a>
+                  </Button>
+                  <Button variant="outline" className="flex items-center gap-2" asChild>
+                    <a href="https://receivt.ro" target="_blank" rel="noopener noreferrer">
+                      <Globe className="h-5 w-5"/>
+                      Website
                     </a>
                   </Button>
                   <Button variant="outline" className="flex items-center gap-2" asChild>

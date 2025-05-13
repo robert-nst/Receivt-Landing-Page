@@ -146,13 +146,13 @@ export default function EmailStep({ email, setEmail, primaryColor, secondaryColo
       </form>
 
       {submitted && (
-        <div className="mt-8 p-4 rounded-lg text-center" style={{ backgroundColor: `${secondaryColor}20` }}>
-          <CheckCircle className="h-8 w-8 mx-auto mb-2" style={{ color: secondaryColor }} />
-          <h3 className="text-lg font-medium" style={{ color: secondaryColor }}>
-            Email Confirmed!
-          </h3>
-          <p className="text-gray-600">You can now proceed to the final step.</p>
-        </div>
+          <div className="mt-8 p-4 rounded-lg text-center bg-green-100">
+            <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-600"/>
+            <h3 className="text-lg font-medium text-green-600">
+              Email Confirmed!
+            </h3>
+            <p className="text-gray-600">You can now proceed to the final step.</p>
+          </div>
       )}
     </div>
   )
